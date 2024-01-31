@@ -1,14 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React,{useState, useEffect} from 'react';
+import firebase from './fireBaseConnect';
+
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
 
 export default function App() {
+  useEffect(() => {
+    async function dados(){
+      await firebase.database().ref('usuarios').set('nome')
+    }
+    dados()
+
+  },[])
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <StatusBar backgroundColor='#000000' barStyle={'default'} translucent={false} />
+      <Text>USANDO FIREBASE</Text>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
