@@ -1,0 +1,14 @@
+.loginInicio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    background-color: #f4a1b5;
+    text-align: center;
+    height: 4rem;
+    padding: 0.5rem;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
