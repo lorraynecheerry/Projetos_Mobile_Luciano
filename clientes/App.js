@@ -1,36 +1,96 @@
 import { useState } from 'react'
-//import { NavigationContainer } from '@react-navigation/native';
-//import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import api from './api'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   StyleSheet,
+  StatusBar,
   Text,
   View,
   TextInput,
   TouchableOpacity,
   Button
-} from 'react-native';
-import { createNavigationContainer } from '@react-navigation/native';
-
-const Stack = createNavigationContainer()
-
-
-export default function App() {
+} from 'react-native'
+ 
+ 
+const Stack = createNativeStackNavigator()
+ 
+function App() {
   return (
-    <NavigationCntainer>
-      <Stack.Navigation>
-        <Stack.Screen  name='Inicio' component ={Inicio}/>
-        <Stack.Screen  name='Dashborad' component ={Dashboard}/>
-      </Stack.Navigation>
-    </NavigationCntainer>
-  );
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name='Dashboard'component={Dashboard}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
+ 
+function Login({ navigation }) {
+  const [nusuario, setNusuario] = useState('')
+  const [password, setPassword] = useState('')
 
-function Inicio ({}) {
-  
+  async function handleLogin() {
+ 
+    try {
+      const resposta = await api.post('/LoginClientes', {
+        nusuario,
+        password
+      })
+      navigation.navigate('Dashboard')
+     
+ 
+    } catch (error) {
+      console.log(error)
+      alert('Nome ou Senha incorretas')
+    }
+ 
+  }
+ 
+ 
+  return (
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      <Text style={styles.titulo}>Login Clientes</Text>
+ 
+      <TextInput
+        style={styles.input}
+        placeholderTextColor='#FFFFFF'
+        placeholder='Digite Seu email'
+        value={nusuario}
+        onChangeText={setNusuario}
+      />
+      <TextInput
+        style={styles.input}
+        placeholderTextColor='#FFFFFF'
+        placeholder='Digite Sua Senha'
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity onPress={handleLogin} style={styles.buttonEnviar}>
+        <Text style={styles.buttonEnviarText}>Enviar</Text>
+      </TouchableOpacity>
+
+
+    </View>
+  )
 }
-
-
+ 
+function Dashboard({ navigation }) {
+  return (
+    <View>
+      <Text>
+        Dashboard
+      </Text>
+      <Button title='Retornar Login'
+        onPress={() => navigation.navigate('Login')}
+      />
+    </View>
+  )
+}
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -38,4 +98,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  input: {
+    color: '#FFFFFF',
+    marginTop: 20,
+    fontSize: 20,
+    backgroundColor: '#000000',
+    height: 45,
+    width: '97%',
+    borderRadius: 5,
+    textAlign: 'center'
+  },
+  buttonEnviar: {
+    marginTop: 30,
+    backgroundColor: "#3A57FC",
+    height: 45,
+    width: '97%',
+    borderRadius: 8,
+  },
+  buttonEnviarText: {
+    textAlign: 'center',
+    padding: 5,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  buttonAsyncNome: {
+    marginTop: 30,
+    backgroundColor: "#FC553A",
+    height: 45,
+    width: '97%',
+    borderRadius: 8,
+  },
+  buttonAsyncToken: {
+    marginTop: 30,
+    backgroundColor: "#FF0023",
+    height: 45,
+    width: '97%',
+    borderRadius: 8,
+  },
+  buttonAsyncClear: {
+    marginTop: 30,
+    backgroundColor: "#DB9107",
+    height: 45,
+    width: '97%',
+    borderRadius: 8,
+  },
+  textResposta: {
+    marginTop: 20,
+    fontSize: 25,
+    fontWeight: 'bold'
+  }
+})
+ 
+export default App
