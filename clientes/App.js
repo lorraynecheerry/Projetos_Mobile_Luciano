@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: 20,
     fontSize: 20,
-    backgroundColor: '#000000',
+    backgroundColor: '#9cc3b2',
     height: 45,
     width: '97%',
     borderRadius: 5,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   buttonEnviar: {
     marginTop: 30,
-    backgroundColor: "#3A57FC",
+    backgroundColor: "#678578",
     height: 45,
     width: '97%',
     borderRadius: 8,

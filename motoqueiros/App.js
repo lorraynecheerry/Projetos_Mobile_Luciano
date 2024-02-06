@@ -30,7 +30,7 @@ function App() {
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
-  // const [respNome, setRespNome] = useState('')
+  const [nome, setNome] = useState('')
   // const [respToken, setRespToken] = useState('')
  
   async function handleLogin() {
@@ -38,32 +38,20 @@ function Login({ navigation }) {
     try {
       const resposta = await api.post('/LoginMotoqueiros', {
         nusuario,
-        password
+        password,
+        
       })
       navigation.navigate('Dashboard')
-      // await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
-      // await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
+      
+      let usuarios = await firebase.database().ref('motoqueiros').child(motoqueiro)
  
     } catch (error) {
       console.log(error)
       alert('Nome ou Senha incorretas')
     }
- 
+    Keyboard.dismiss()
   }
- 
-  // async function handleAsyncNome() {
-  //   const iNome = await AsyncStorage.getItem('@nome')
-  //   const nome = JSON.parse(iNome)
-  //   setRespToken('')
-  //   setRespNome(nome)
-  // }
- 
-  // async function handleAsyncToken() {
-  //   const iToken = await AsyncStorage.getItem('@token')
-  //   const token = JSON.parse(iToken)
-  //   setRespNome('')
-  //   setRespToken(token)
-  // }
+
  
   async function handleClearAsync() {
     await AsyncStorage.clear()
@@ -75,12 +63,21 @@ function Login({ navigation }) {
       <Text style={styles.titulo}>Login Motoqueiros</Text>
  
       <TextInput
+       style={styles.input}
+       placeholderTextColor='#FFFFFF'
+       placeholder='Digite Seu Nome'
+       secureTextEntry={true}
+       value={nome}
+       onChangeText={setNome}/>
+
+      <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
         placeholder='Digite Seu Usuário'
         value={nusuario}
         onChangeText={setNusuario}
       />
+
       <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
@@ -93,21 +90,7 @@ function Login({ navigation }) {
         <Text style={styles.buttonEnviarText}>Enviar</Text>
       </TouchableOpacity>
 
-{/* 
-      <TouchableOpacity onPress={handleAsyncNome} style={styles.buttonAsyncNome}>
-        <Text style={styles.buttonEnviarText}>Async_Nome</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleAsyncToken} style={styles.buttonAsyncToken}>
-        <Text style={styles.buttonEnviarText}>Async_Token</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleClearAsync} style={styles.buttonAsyncClear}>
-        <Text style={styles.buttonEnviarText}>Async_Clear</Text>
-      </TouchableOpacity>
-       */}
-      <Text style={styles.textResposta}>{respNome}</Text>
-      <Text>{respToken}</Text>
  
     </View>
   )
