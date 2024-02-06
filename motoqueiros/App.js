@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import api from './api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import firebase from './FirebaseConnect'
 import {
   StyleSheet,
   StatusBar,
@@ -30,7 +31,6 @@ function App() {
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
-  const [nome, setNome] = useState('')
   // const [respToken, setRespToken] = useState('')
  
   async function handleLogin() {
@@ -40,36 +40,37 @@ function Login({ navigation }) {
         nusuario,
         password,
         
-      })
+      }) 
       navigation.navigate('Dashboard')
-      
-      let usuarios = await firebase.database().ref('motoqueiros').child(motoqueiro)
+      await AsyncStorage.setItem('@id', JSON.stringify(resposta.data.id))
+      await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
+      await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
+      const iNome = await AsyncStorage.getItem('@nome')
+ 
+      let usuarios = await firebase.database().ref('motoqueiros').child(resposta.data.id) //ref(NÓ), child(FILHO)
+      let chave = usuarios.push().key
+      usuarios.child(chave).set({
+        nusuario: nusuario,
+        respNome:iNome
+      })
  
     } catch (error) {
       console.log(error)
-      alert('Nome ou Senha incorretas')
+      alert('Usuário/Senha Incorretos')
     }
-    Keyboard.dismiss()
   }
 
  
   async function handleClearAsync() {
     await AsyncStorage.clear()
   }
+
  
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text style={styles.titulo}>Login Motoqueiros</Text>
  
-      <TextInput
-       style={styles.input}
-       placeholderTextColor='#FFFFFF'
-       placeholder='Digite Seu Nome'
-       secureTextEntry={true}
-       value={nome}
-       onChangeText={setNome}/>
-
       <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
