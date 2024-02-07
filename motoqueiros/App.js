@@ -1,9 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import api from './api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firebase from './FirebaseConnect'
+import { useKeepAwake } from 'expo-keep-awake' //biblioteca para o mapa
+import MapView, { Marker } from 'react-native-maps' //mapa
+import {
+  requestForegroundPermissionsAsync,
+  getCurrentPositionAsync,
+  watchPositionAsync,
+  LocationAccuracy
+} from 'expo-location'
 import {
   StyleSheet,
   StatusBar,
@@ -11,66 +19,72 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Button
+  Button,
+  Image
 } from 'react-native'
- 
- 
+
+
 const Stack = createNativeStackNavigator()
- 
+
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name='Dashboard'component={Dashboard}/>
+        <Stack.Screen name='Dashboard' component={Dashboard} />
+        <Stack.Screen name='Rota' component={Rota} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
- 
+
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
-  // const [respToken, setRespToken] = useState('')
- 
+  
+
+
   async function handleLogin() {
- 
+
     try {
       const resposta = await api.post('/LoginMotoqueiros', {
         nusuario,
         password,
-        
-      }) 
+
+      })
       navigation.navigate('Dashboard')
       await AsyncStorage.setItem('@id', JSON.stringify(resposta.data.id))
       await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
       await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
       const iNome = await AsyncStorage.getItem('@nome')
- 
+    const positionAtual = await getCurrentPositionAsync();
+      
+
       let usuarios = await firebase.database().ref('motoqueiros').child(resposta.data.id) //ref(NÓ), child(FILHO)
       let chave = usuarios.push().key
       usuarios.child(chave).set({
         nusuario: nusuario,
-        respNome:iNome
+        respNome: iNome,
+        latitude:positionAtual.coords.latitude,
+        longitude:positionAtual.coords.longitude
+     
       })
- 
+
     } catch (error) {
       console.log(error)
       alert('Usuário/Senha Incorretos')
     }
   }
 
- 
   async function handleClearAsync() {
     await AsyncStorage.clear()
   }
 
- 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text style={styles.titulo}>Login Motoqueiros</Text>
- 
+
       <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
@@ -92,16 +106,22 @@ function Login({ navigation }) {
       </TouchableOpacity>
 
 
- 
+
     </View>
   )
 }
- 
+
 function Dashboard({ navigation }) {
   return (
     <View>
-      <Text>
+      <Text style={styles.titulo}>
         Dashboard
+        <View>
+          <Button title='Ver rota'
+            onPress={() => navigation.navigate('Rota')}
+          />
+        </View>
+
       </Text>
       <Button title='Retornar Login'
         onPress={() => navigation.navigate('Login')}
@@ -109,7 +129,68 @@ function Dashboard({ navigation }) {
     </View>
   )
 }
- 
+
+function Rota({ navigation }) {
+  useKeepAwake()
+  const [localizacao, setlocalizacao] = useState(null)
+
+  const mapaRef = useRef(MapView)
+
+  useEffect(() => {
+    async function requisitarLocal() {
+      const { granted } = await requestForegroundPermissionsAsync()
+      if (granted) {
+        const positionAtual = await getCurrentPositionAsync()
+        setlocalizacao(positionAtual)
+      }
+    }
+    requisitarLocal()
+  }, [])
+
+  useEffect(() => {
+    watchPositionAsync({
+      accuracy: LocationAccuracy.Highest,
+      timeInterval: 1000,
+      distanceInterval: 1
+    }, (resposta) => {
+      setlocalizacao(resposta)
+      mapaRef.current.animateCamera({
+        pitch: 70,
+        center: resposta.coords
+      })
+    })
+  }, [])
+
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor='#D9900F' barStyle='light-content' translucent={false} />
+
+      {
+        localizacao &&
+        <MapView
+          ref={mapaRef}
+          style={styles.mapview}
+          loadingEnabled={true}
+          initialRegion={{
+            latitude: localizacao.coords.latitude,
+            longitude: localizacao.coords.longitude,
+            latitudeDelta: 0.003,
+            longitudeDelta: 0.003
+          }}
+        >
+         
+            <Image
+              style={styles.iconMarker}
+              source={require('./assets/capacete.png')}
+            />
+
+
+        </MapView>
+      }
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -170,7 +251,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 25,
     fontWeight: 'bold'
+  },
+  mapview: {
+    height: '100%',
+    width: '100%'
+  },
+  iconMarker: {
+    height: 25,
+    width: 25,
+    resizeMode: 'contain'
   }
 })
- 
+
 export default App
