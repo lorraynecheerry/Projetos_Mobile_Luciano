@@ -81,12 +81,14 @@ function Login({ navigation }) {
 function Dashboard({ navigation }) {
   return (
     <View>
-      <Text>
+      <Text style={styles.titulo}>
         Dashboard
       </Text>
       <Button title='Retornar Login'
         onPress={() => navigation.navigate('Login')}
       />
+
+      
     </View>
   )
 }

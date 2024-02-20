@@ -41,7 +41,7 @@ function App() {
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
-  
+
 
 
   async function handleLogin() {
@@ -57,17 +57,17 @@ function Login({ navigation }) {
       await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
       await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
       const iNome = await AsyncStorage.getItem('@nome')
-    const positionAtual = await getCurrentPositionAsync();
-      
+      const positionAtual = await getCurrentPositionAsync();
+
 
       let usuarios = await firebase.database().ref('motoqueiros').child(resposta.data.id) //ref(NÓ), child(FILHO)
       let chave = usuarios.push().key
       usuarios.child(chave).set({
         nusuario: nusuario,
         respNome: iNome,
-        latitude:positionAtual.coords.latitude,
-        longitude:positionAtual.coords.longitude
-     
+        latitude: positionAtual.coords.latitude,
+        longitude: positionAtual.coords.longitude
+
       })
 
     } catch (error) {
@@ -111,21 +111,42 @@ function Login({ navigation }) {
   )
 }
 
+
 function Dashboard({ navigation }) {
+  const [dados, setDados] = useState([''])
+
+
+
+  useEffect(() => {
+    async function motoqueiros() {
+      const response = await api.get('/ListarMotoqueirosToken')
+      setDados(response.data)
+    }
+    motoqueiros()
+  }, [dados])
+
+
   return (
     <View>
       <Text style={styles.titulo}>
+       {dados.map((item) => {
+          item.id
+        })}
+        {dados.nome}
         Dashboard
-        <View>
-          <Button title='Ver rota'
-            onPress={() => navigation.navigate('Rota')}
-          />
-        </View>
-
+        Motoqueiros:
+       
       </Text>
-      <Button title='Retornar Login'
-        onPress={() => navigation.navigate('Login')}
-      />
+      <View style={styles.rota}>
+        <Button title='Retornar Login'
+          onPress={() => navigation.navigate('Login')}
+        />
+      </View>
+      <View style={styles.rota}>
+        <Button title='Ver rota'
+          onPress={() => navigation.navigate('Rota')}
+        />
+      </View>
     </View>
   )
 }
@@ -178,11 +199,11 @@ function Rota({ navigation }) {
             longitudeDelta: 0.003
           }}
         >
-         
-            <Image
-              style={styles.iconMarker}
-              source={require('./assets/capacete.png')}
-            />
+
+          <Image
+            style={styles.iconMarker}
+            source={require('./assets/capacete.png')}
+          />
 
 
         </MapView>
@@ -260,7 +281,15 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     resizeMode: 'contain'
+  },
+  rota: {
+    marginTop: 20,
+    padding: 5,
+    height: 45,
+    width: '97%',
+    textAlign: 'center'
   }
+
 })
 
 export default App
