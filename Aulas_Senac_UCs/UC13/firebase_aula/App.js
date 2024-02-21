@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import firebase from './fireBaseConnect';
-
 import {
   StatusBar,
   StyleSheet,
@@ -11,6 +10,9 @@ import {
 
 } from 'react-native';
 
+import Feather from 'react-native-vector-icons/Feather'
+
+console.desableYellowBox = false
 
 export default function App() {
 
@@ -57,6 +59,11 @@ export default function App() {
     buscarVendedores()
   }, [])
 
+  async function handleDelete(key) {
+    await firebase.database().ref('vendedores').child(key).remove()
+    alert(key)
+  }
+
 
   useEffect(() => {
     async function dados() {
@@ -88,8 +95,20 @@ export default function App() {
       {vendedores.map((item) => {
         return (
           <View>
-            <Text>Nome:{item.nome}</Text>
-            <Text>Cidade:{item.cidade}</Text>
+            {item.length !== 0 && (  //se item for diferente de 0 ele vai renderizar o que tem dentro do text
+              // se nao ele vai renderizar em branco   //<> = serve para encapsular um JSX
+              <>
+                <Text>Nome:{item.nome}</Text>
+                <Text>Cidade:{item.cidade}</Text>
+                <TouchableOpacity onPress={() => handleDelete(item.key)}>
+
+                  <Feather name='trash-2' size={30} color='red' />
+                </TouchableOpacity>
+
+
+              </>
+            )}
+
           </View>
         )
       })}

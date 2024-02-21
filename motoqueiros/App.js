@@ -41,6 +41,7 @@ function App() {
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
+  
 
 
 
@@ -113,26 +114,26 @@ function Login({ navigation }) {
 
 
 function Dashboard({ navigation }) {
-  const [dados, setDados] = useState([''])
+  const [motoqueiro, setMotoqueiro] = useState([''])
 
 
 
-  useEffect(() => {
-    async function motoqueiros() {
-      const response = await api.get('/ListarMotoqueirosToken')
-      setDados(response.data)
-    }
-    motoqueiros()
-  }, [dados])
+  // useEffect(() => {
+  //   async function motoqueiros() {
+      
+  //     setDados(response.data)
+  //   }
+  //   motoqueiros()
+  // }, [dados])
 
 
   return (
     <View>
       <Text style={styles.titulo}>
-       {dados.map((item) => {
+       {/* {dados.map((item) => {
           item.id
-        })}
-        {dados.nome}
+        })} */}
+        {/* {dados.nome} */}
         Dashboard
         Motoqueiros:
        

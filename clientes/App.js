@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import api from './api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import firebase from "../clientes/FirebaseConnect"
+
+
 import {
   StyleSheet,
   StatusBar,
@@ -12,48 +15,48 @@ import {
   TouchableOpacity,
   Button
 } from 'react-native'
- 
- 
+
+
 const Stack = createNativeStackNavigator()
- 
+
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name='Dashboard'component={Dashboard}/>
+        <Stack.Screen name='Dashboard' component={Dashboard} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
- 
+
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
 
   async function handleLogin() {
- 
+
     try {
       const resposta = await api.post('/LoginClientes', {
         nusuario,
         password
       })
       navigation.navigate('Dashboard')
-     
- 
+
+
     } catch (error) {
       console.log(error)
       alert('Nome ou Senha incorretas')
     }
- 
+
   }
- 
- 
+
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text style={styles.titulo}>Login Clientes</Text>
- 
+
       <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
@@ -77,22 +80,51 @@ function Login({ navigation }) {
     </View>
   )
 }
- 
+
 function Dashboard({ navigation }) {
+
+  const [latitude, setLatitude] = useState('')
+  const [longetude, setLongetude] = useState('')
+
+
+
+  useEffect(() => {
+
+    async function acompanhamentoPedido() {
+      await firebase.database().ref(motoqueiros).on('value', (snapshot) => {
+        snapshot?.forEach((item) => {
+          let data = {
+            key:item.key,
+            latitude: item.val().chave.latitude,
+            longetude: item.val().localizacao.longetude
+          }
+          setLatitude(data.latitude)
+          setLongetude(data.longetude)
+        })
+      })
+    }
+    acompanhamentoPedido()
+  }, [])
   return (
     <View>
       <Text style={styles.titulo}>
         Dashboard
       </Text>
+
+      <View>
+        <Text style={styles.titulo}> latitude:{latitude}</Text>
+        <Text style={styles.titulo}> longitude:{longetude}</Text>
+      </View>
+
       <Button title='Retornar Login'
         onPress={() => navigation.navigate('Login')}
       />
 
-      
+
     </View>
   )
 }
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -153,7 +185,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 25,
     fontWeight: 'bold'
+  },
+  localFirebase: {
+    margintop: 30,
+
   }
 })
- 
+
 export default App
