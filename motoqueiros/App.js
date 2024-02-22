@@ -62,8 +62,8 @@ function Login({ navigation }) {
 
 
       let usuarios = await firebase.database().ref('motoqueiros').child(resposta.data.id) //ref(NÓ), child(FILHO)
-      let chave = usuarios.push().key
-      usuarios.child(chave).set({
+      //let chave = usuarios.push().key
+      usuarios.child('localizacao').set({
         nusuario: nusuario,
         respNome: iNome,
         latitude: positionAtual.coords.latitude,
