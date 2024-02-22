@@ -51,7 +51,7 @@ export default function App() {
             cidade: item.val().cidade
           }
           setVendedores(oldArray => [...oldArray, data]) //oldArray = para nao se sobrepor um em cima do outro)
-         // console.log(data)
+          // console.log(data)
         })
       })
 
@@ -59,6 +59,8 @@ export default function App() {
     buscarVendedores()
   }, [])
 
+
+  //funçao para apagar 
   async function handleDelete(key) {
     await firebase.database().ref('vendedores').child(key).remove()
     alert(key)

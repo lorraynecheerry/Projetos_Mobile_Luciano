@@ -114,30 +114,30 @@ function Login({ navigation }) {
 
 
 function Dashboard({ navigation }) {
-  const [motoqueiro, setMotoqueiro] = useState([''])
+  const [pedido, setPedido] = useState([''])
 
-
-
-  // useEffect(() => {
-  //   async function motoqueiros() {
-      
-  //     setDados(response.data)
-  //   }
-  //   motoqueiros()
-  // }, [dados])
 
 
   return (
     <View>
       <Text style={styles.titulo}>
-       {/* {dados.map((item) => {
-          item.id
-        })} */}
-        {/* {dados.nome} */}
         Dashboard
-        Motoqueiros:
-       
       </Text>
+      
+      <Text style={styles.titulo}>
+      Motoqueiros:
+    
+      </Text>
+      
+      <TextInput
+        style={styles.input}
+        placeholderTextColor='#FFFFFF'
+        placeholder='numero do pedido'
+        //secureTextEntry={true}
+        value={pedido}
+        onChangeText={setPedido}
+      /> 
+
       <View style={styles.rota}>
         <Button title='Retornar Login'
           onPress={() => navigation.navigate('Login')}

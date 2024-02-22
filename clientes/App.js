@@ -84,22 +84,22 @@ function Login({ navigation }) {
 function Dashboard({ navigation }) {
 
   const [latitude, setLatitude] = useState('')
-  const [longetude, setLongetude] = useState('')
+  const [longitude, setLongitude] = useState('')
 
 
 
   useEffect(() => {
 
     async function acompanhamentoPedido() {
-      await firebase.database().ref(motoqueiros).on('value', (snapshot) => {
+      await firebase.database().ref('motoqueiros').on('value', (snapshot) => {
         snapshot?.forEach((item) => {
           let data = {
             key:item.key,
-            latitude: item.val().chave.latitude,
-            longetude: item.val().localizacao.longetude
+            latitude: item.val().localizacao.latitude,
+            longitude: item.val().localizacao.longitude
           }
           setLatitude(data.latitude)
-          setLongetude(data.longetude)
+          setLongitude(data.longitude)
         })
       })
     }
@@ -113,7 +113,7 @@ function Dashboard({ navigation }) {
 
       <View>
         <Text style={styles.titulo}> latitude:{latitude}</Text>
-        <Text style={styles.titulo}> longitude:{longetude}</Text>
+        <Text style={styles.titulo}> longitude:{longitude}</Text>
       </View>
 
       <Button title='Retornar Login'
