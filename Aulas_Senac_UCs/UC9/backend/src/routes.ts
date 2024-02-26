@@ -19,6 +19,9 @@ import { ListarCategoriasController } from './Controller/Categorias/ListarCatego
 import { CriarClientesController } from './Controller/Clientes/CriarClientesController'
 import { LoginClientesController } from './Controller/Clientes/LoginClientesController'
 
+
+import { CriarItemdoPedidoController } from './Controller/Itens do Pedidos/CriarItemdoPedidoController'
+
 import { isAutenticado } from './middleware/isAutenticado'
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
@@ -46,7 +49,9 @@ router.post ('/LoginClientes',  new LoginClientesController().handle)
 
 
 
- 
+ //Criar item do pedido
+router.post('/CriarItemdoPedido', new CriarClientesController().handle)
+
 
 //Estrutura de Categorias
 router.post('/CriarCategorias', isAutenticado, new CriarCategoriasController().handle)

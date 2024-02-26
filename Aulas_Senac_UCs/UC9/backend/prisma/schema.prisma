@@ -19,6 +19,7 @@ model Motoqueiro {
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
+  Pedido    Pedido?
 
   @@map("motoqueiros")
 }
@@ -31,6 +32,7 @@ model Usuario {
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
+  Pedido    Pedido?
 
   @@map("usuarios")
 }
@@ -58,8 +60,9 @@ model Produto {
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
-  categorias  Categoria @relation(fields: [categoriaId], references: [id])
+  categorias  Categoria    @relation(fields: [categoriaId], references: [id])
   categoriaId String
+  itemPedido  itemPedido[]
 
   @@map("produtos")
 }
@@ -76,9 +79,47 @@ model Clients {
   estado      String
   cep         String
   email       String
-  password     String
+  password    String
   create_at   DateTime? @default(now())
   update_at   DateTime? @default(now())
 
+  pedidos Pedido?
+
   @@map("clientes")
+}
+
+model Pedido {
+  id      String @id @default(uuid())
+  nPedido String
+  status  String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  clientes   Clients @relation(fields: [clientesId], references: [id])
+  clientesId String  @unique
+
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId String  @unique
+
+  motoqueiros  Motoqueiro @relation(fields: [motoqueiroId], references: [id])
+  motoqueiroId String     @unique
+
+  @@map("pedidos")
+}
+
+model itemPedido {
+  id             String @id @default(uuid())
+  produto        String
+  quantidade     String
+  valor_Unitario String
+  valor_Total    String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  produtos   Produto @relation(fields: [itemPedido], references: [id])
+  itemPedido String
+
+  @@map("itemPedido")
 }

@@ -41,7 +41,7 @@ function App() {
 function Login({ navigation }) {
   const [nusuario, setNusuario] = useState('')
   const [password, setPassword] = useState('')
-  
+
 
 
 
@@ -123,12 +123,12 @@ function Dashboard({ navigation }) {
       <Text style={styles.titulo}>
         Dashboard
       </Text>
-      
+
       <Text style={styles.titulo}>
-      Motoqueiros:
-    
+        Motoqueiros:
+
       </Text>
-      
+
       <TextInput
         style={styles.input}
         placeholderTextColor='#FFFFFF'
@@ -136,7 +136,12 @@ function Dashboard({ navigation }) {
         //secureTextEntry={true}
         value={pedido}
         onChangeText={setPedido}
-      /> 
+      />
+      <View View style={styles.rota}>
+        <Button title='Enviar'
+        ></Button>
+      </View>
+
 
       <View style={styles.rota}>
         <Button title='Retornar Login'
@@ -287,8 +292,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 5,
     height: 45,
-    width: '97%',
-    textAlign: 'center'
+    width: '100%',
+    textAlign: 'center',
+    
   }
 
 })
