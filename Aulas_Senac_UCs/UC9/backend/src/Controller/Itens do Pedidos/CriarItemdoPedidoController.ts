@@ -4,12 +4,12 @@ import { CriarItemdoPedidoServices} from '../../Services/Item do Pedido/CriarIte
 
 class CriarItemdoPedidoController{
     async handle (req:Request, res:Response) {
-        const {produto, quantidade, valor_Unitario, valor_Total} =req.body
+        const {produtoId, quantidade,pedidosId} =req.body
         const criarItemPedidoservices = new CriarItemdoPedidoServices()
         const itens = await criarItemPedidoservices.execute({
-            produto, quantidade, valor_Unitario, valor_Total
+            produtoId, quantidade,pedidosId
         })
-        console.log(itens)
+    
        return res.json(itens)
     }
 }

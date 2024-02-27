@@ -60,9 +60,10 @@ model Produto {
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
-  categorias  Categoria    @relation(fields: [categoriaId], references: [id])
+  categorias  Categoria @relation(fields: [categoriaId], references: [id])
   categoriaId String
-  itemPedido  itemPedido[]
+
+  itemPedido itemPedido[]
 
   @@map("produtos")
 }
@@ -102,24 +103,27 @@ model Pedido {
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId String  @unique
 
-  motoqueiros  Motoqueiro @relation(fields: [motoqueiroId], references: [id])
-  motoqueiroId String     @unique
+  motoqueiros  Motoqueiro   @relation(fields: [motoqueiroId], references: [id])
+  motoqueiroId String       @unique
+  
+  itemPedido   itemPedido[]
 
   @@map("pedidos")
 }
 
 model itemPedido {
   id             String @id @default(uuid())
-  produto        String
   quantidade     String
-  valor_Unitario String
-  valor_Total    String
+ 
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
-  produtos   Produto @relation(fields: [itemPedido], references: [id])
-  itemPedido String
+  produtos   Produto @relation(fields: [produtosId], references: [id])
+  produtosId String
 
-  @@map("itemPedido")
+  pedido    Pedido @relation(fields: [pedidosId], references: [id])
+  pedidosId String
+
+  @@map("itemPedidos")
 }
