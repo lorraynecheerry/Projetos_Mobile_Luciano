@@ -3,9 +3,9 @@ interface DeletarItemPedido {
     deletar: string
 }
 
-class DeletarItemdoPedidoServices {
+class  DeletarPedidoServices {
     async execute({ deletar }: DeletarItemPedido) {
-        await prismaClient.itemPedido.delete({
+        await prismaClient.pedido.delete({
             where: {
                 id: deletar
             }
@@ -13,4 +13,4 @@ class DeletarItemdoPedidoServices {
         return { dados: 'Apagado com sucesso' }
     }
 }
-export { DeletarItemdoPedidoServices }
+export { DeletarPedidoServices}

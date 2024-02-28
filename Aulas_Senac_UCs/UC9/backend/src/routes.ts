@@ -21,8 +21,16 @@ import { LoginClientesController } from './Controller/Clientes/LoginClientesCont
 
 import { CriarPedidoController } from './Controller/Pedidos/CriarPedidoController'
 import { CriarItemdoPedidoController } from './Controller/Itens do Pedidos/CriarItemdoPedidoController'
+import { DeletarItemdoPedidoController } from './Controller/Itens do Pedidos/DeletarItemdoPedidoController'
+
+import { DeletarPedidoController } from './Controller/Pedidos/DeletarPedidosController'
+
+import { ListarPedidosController } from './Controller/Pedidos/ListarPedidosController'
 
 import { isAutenticado } from './middleware/isAutenticado'
+
+import { AlterarItemdoPedidoController } from './Controller/Itens do Pedidos/AlterarItemdoPedidoController'
+
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
 
@@ -49,11 +57,13 @@ router.post ('/LoginClientes',  new LoginClientesController().handle)
 
 //pedidos
 router.post ('/CriarPedido',new CriarPedidoController().handle)
-
+router.delete('/DeletarPedido', new DeletarPedidoController().handle)
+router.get ('/ListarPedidos',new ListarPedidosController().handle)
 
  //Criar item do pedido
 router.post('/CriarItemdoPedido', new CriarItemdoPedidoController().handle)
-
+router.put('/AlterarItemdoPedido/:id',new AlterarItemdoPedidoController().handle)
+router.delete('/DeletarItemdoPedido',new DeletarItemdoPedidoController().handle )
 
 //Estrutura de Categorias
 router.post('/CriarCategorias',  new CriarCategoriasController().handle)
