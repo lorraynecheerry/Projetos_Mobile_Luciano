@@ -45,17 +45,39 @@ export default function Dashboard() {
 
         listarPedidos()
     }, [pedido])
-   
+
     return (
         <div>
             <h1>Dashboard</h1>
             {pedido.map((pedido) => {
                 return (
                     <article>
-                        <h1> Numero Pedido:{pedido.nPedido}</h1>
 
-                        <h1>Status Pedido:{pedido.status}</h1>
 
+
+
+
+                        {/* 
+                        <th>
+                            <td>Status Pedido:{pedido.status}</td>
+                            <td> Numero Pedido:{pedido.nPedido}</td>
+                        </th> */}
+
+
+                        <table border="1">
+                            <th>
+                                <td>Status Pedido</td>
+                                <td>Numero Pedido:</td> 
+
+                            </th>
+
+                            <tr>
+                                <td>{pedido.status}</td>
+                                <td>{pedido.nPedido}</td>
+                                {/* <td>{pedido.clientes.nome}</td> */}
+
+                            </tr>
+                        </table>
 
                     </article>
 
