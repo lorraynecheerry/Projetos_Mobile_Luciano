@@ -17,7 +17,7 @@ export default function Produtos() {
 
     const iToken = localStorage.getItem('@tklogin2023')
     const token = JSON.parse(iToken)
-    
+
     useEffect(() => {
         async function loadCategorias() {
             const resposta = await apiLocal.get('/ListarCategorias', {
@@ -30,12 +30,12 @@ export default function Produtos() {
         loadCategorias()
     }, [categorias])
 
-    function handleImagem(e){
-        if(!e.target.files){
+    function handleImagem(e) {
+        if (!e.target.files) {
             return
         }
         const image = e.target.files[0]
-        if(image.type === 'image/png' || image.type === 'image/jpeg'){
+        if (image.type === 'image/png' || image.type === 'image/jpeg') {
             setImagem(image)
         }
     }
@@ -53,7 +53,10 @@ export default function Produtos() {
             data.append('file', imagem)
 
             const resposta = await apiLocal.post('/CriarProdutos', data, {
-                
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+
             })
             toast.success(resposta.data.dados)
 
@@ -119,7 +122,7 @@ export default function Produtos() {
                         value={setImagem}
                         accept='image/jpeg, image/png'
                         onChange={handleImagem}
-                    />                   
+                    />
                     <button type='submit'>Enviar</button>
                 </form>
             </div>

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import apiLocal from '../API/apiLocal/api'
+import './App.scss'
 
 
 export default function Dashboard() {
+
     const navigation = useNavigate()
-    const [pedido, setPedido] = useState([''])
+    const [pedidos, setPedidos] = useState([''])
+    const [ler, setLer] = useState(false)
 
     function handleSair() {
         localStorage.removeItem('@tklogin2023')
@@ -25,7 +28,7 @@ export default function Dashboard() {
                         Authorization: 'Bearer ' + `${token}`
                     }
                 })
-                console.log(resposta)
+                // console.log(resposta)
                 if (resposta.data.dados) {
                     navigation('/')
                     return
@@ -38,56 +41,74 @@ export default function Dashboard() {
     }, [token])
 
     useEffect(() => {
-        async function listarPedidos() {
-            const response = await apiLocal.get('/ListarPedidos')
-            setPedido(response.data)
+        async function loadPedido() {
+            const resposta = await apiLocal.get('/ListarPedidos')
+            setPedidos(resposta.data)
         }
+        loadPedido()
+    }, [pedidos])
 
-        listarPedidos()
-    }, [pedido])
-
+    async function pedidoMudar() {
+      
+    }
+   
     return (
-        <div>
+        <div className="conteinerDashboard">
             <h1>Dashboard</h1>
-            {pedido.map((pedido) => {
-                return (
-                    <article>
+
+            <h3>Pedidos em Rascunho</h3>
+            <table>
+                <tr>
+                    <th>Numero do Pedido: </th>
+                    <th>Nome do Cliente: </th>
+                    <th>Status do Pedido: </th>
+                </tr>
+                <tr>
+                    <td>
+                        {pedidos.map((item) => {
+                            return (
+                                <p>
+                                    {item.nPedido}
+                                </p>
+                            )
+                        })}
+                    </td>
 
 
+                    <td>
+                        {pedidos.map((item) => {
+                            return (
+                                <p>
+                                    {item.clientes?.nome}
+                                </p>
+                            )
+                        })}
+                    </td>
 
+                    <td>
+                        {pedidos.map((item) => {
+                            return (
+                                <p>
+                            <Link >{item.status}</Link>  
+                                </p>
+                            )
+                        })}
+                    </td>
+                </tr>
+            </table>
 
+            <h3>Pedidos em Efetuado</h3>
+            <table>
+                <tr>
+                    <th>Numero do Pedido: </th>
+                    <th>Nome do Cliente: </th>
+                    <th>Status do Pedido: </th>
+                </tr>
 
-                        {/* 
-                        <th>
-                            <td>Status Pedido:{pedido.status}</td>
-                            <td> Numero Pedido:{pedido.nPedido}</td>
-                        </th> */}
-
-
-                        <table border="1">
-                            <th>
-                                <td>Status Pedido</td>
-                                <td>Numero Pedido:</td> 
-
-                            </th>
-
-                            <tr>
-                                <td>{pedido.status}</td>
-                                <td>{pedido.nPedido}</td>
-                                {/* <td>{pedido.clientes.nome}</td> */}
-
-                            </tr>
-                        </table>
-
-                    </article>
-
-
-
-                )
-            })}
-
+            </table>
 
             <Link to='/Produtos'>Cadastrar Produtos</Link>
+
             <button onClick={handleSair}>Sair</button>
         </div>
     )

@@ -17,7 +17,6 @@ class ListarUsuarioTokenServices {
             }
         })
         return resposta
-
     }
 }
 

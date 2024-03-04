@@ -46,7 +46,7 @@ router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
 
 //Estrutura de Usuários
 router.post('/CriarUsuarios', new CriarusuariosController().handle)
-router.get('/ListarUsuarioToken',  new ListarUsuarioTokenController().handle)
+router.get('/ListarUsuarioToken', isAutenticado,  new ListarUsuarioTokenController().handle)
 
 //Estrutura de Produtos
 router.post('/CriarProdutos',  upload.single('file'), new CriarProdutosController().handle)
