@@ -49,13 +49,13 @@ export default function Dashboard() {
     }, [pedidos])
 
     async function pedidoMudar() {
-      
+
     }
-   
+
     return (
         <div className="conteinerDashboard">
             <h1>Dashboard</h1>
-
+           
             <h3>Pedidos em Rascunho</h3>
             <table>
                 <tr>
@@ -89,7 +89,7 @@ export default function Dashboard() {
                         {pedidos.map((item) => {
                             return (
                                 <p>
-                            <Link >{item.status}</Link>  
+                                    <Link >{item.status}</Link>
                                 </p>
                             )
                         })}
@@ -107,7 +107,9 @@ export default function Dashboard() {
 
             </table>
 
-            <Link to='/Produtos'>Cadastrar Produtos</Link>
+            <button> <Link to='/CriarCategorias'>Categorias</Link></button>
+            <button> <Link to='/Produtos'>Cadastrar Produtos</Link></button>
+
 
             <button onClick={handleSair}>Sair</button>
         </div>
