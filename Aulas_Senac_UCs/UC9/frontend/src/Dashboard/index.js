@@ -55,7 +55,7 @@ export default function Dashboard() {
     return (
         <div className="conteinerDashboard">
             <h1>Dashboard</h1>
-           
+
             <h3>Pedidos em Rascunho</h3>
             <table>
                 <tr>
@@ -109,6 +109,7 @@ export default function Dashboard() {
 
             <button> <Link to='/CriarCategorias'>Categorias</Link></button>
             <button> <Link to='/Produtos'>Cadastrar Produtos</Link></button>
+            <button> <Link to='/PedidosCozinha'>Pedido</Link></button>
 
 
             <button onClick={handleSair}>Sair</button>
