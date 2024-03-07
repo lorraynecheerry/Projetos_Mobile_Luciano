@@ -1,23 +1,22 @@
-// import prismaClient from "../../prisma";
+import prismaClient from "../../prisma";
 
-// interface PedidoUnique {
-//     id: string
-// }
+interface PedidoUnico {
+    id: string
+}
 
-// class ListarPeididosUnicoServices(){
-//     async execute({ id }: PedidoUnique) {
-//         const resposta = await prismaClient.pedido.findUnique({
-//             where: {
-//                 id: id
-//             },
-//             select: {
-//                 id: true,
-//                 nPedido:true,
-//                 status:true
-//             }
-//         })
-//         return resposta
-//     }
-// }
+class ListarPedidosUnicoServices {
+    async execute({ id }: PedidoUnico) {
+        const resposta = await prismaClient.itemPedido.findMany({
+            where: {
+                pedidosId:id 
+            },
+            include: {
+                produtos: true,
+                pedido: true
+            }
+        })
+        return (resposta)
+    }
+}
 
-// export { ListarPeididosUnicoServices }
+export { ListarPedidosUnicoServices }

@@ -29,7 +29,10 @@ import { ListarPedidosController } from './Controller/Pedidos/ListarPedidosContr
 
 import { isAutenticado } from './middleware/isAutenticado'
 
+import { ListarPedidosUnicoController } from './Controller/Pedidos/ListarPedidoUnicoController'
+
 import { AlterarItemdoPedidoController } from './Controller/Itens do Pedidos/AlterarItemdoPedidoController'
+import { ListarPedidosUnicoServices } from './Services/Pedidos/ListarPedidosUnicoServices'
 
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
@@ -59,6 +62,7 @@ router.post ('/LoginClientes',  new LoginClientesController().handle)
 router.post ('/CriarPedido',new CriarPedidoController().handle)
 router.delete('/DeletarPedido', new DeletarPedidoController().handle)
 router.get ('/ListarPedidos',new ListarPedidosController().handle)
+router.get('/ListarPedidoUnico', new ListarPedidosUnicoController().handle)
 
  //Criar item do pedido
 router.post('/CriarItemdoPedido', new CriarItemdoPedidoController().handle)
