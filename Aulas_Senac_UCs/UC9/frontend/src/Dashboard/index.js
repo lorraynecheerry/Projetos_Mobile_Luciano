@@ -109,7 +109,7 @@ export default function Dashboard() {
 
             <button> <Link to='/CriarCategorias'>Categorias</Link></button>
             <button> <Link to='/Produtos'>Cadastrar Produtos</Link></button>
-            <button> <Link to='/PedidosCozinha'>Pedido</Link></button>
+            <button> <Link to='/Pedidos'>Pedidos</Link></button>
 
 
             <button onClick={handleSair}>Sair</button>

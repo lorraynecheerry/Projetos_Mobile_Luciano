@@ -103,18 +103,18 @@ model Pedido {
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId String  @unique
 
-  motoqueiros  Motoqueiro   @relation(fields: [motoqueiroId], references: [id])
-  motoqueiroId String       @unique
-  
-  itemPedido   itemPedido[]
+  motoqueiros  Motoqueiro @relation(fields: [motoqueiroId], references: [id])
+  motoqueiroId String     @unique
+
+  itemPedido itemPedido[]
 
   @@map("pedidos")
 }
 
 model itemPedido {
-  id             String @id @default(uuid())
-  quantidade     String
- 
+  id         String @id @default(uuid())
+  quantidade String
+  valor      Decimal @db.Decimal(9,2)
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())

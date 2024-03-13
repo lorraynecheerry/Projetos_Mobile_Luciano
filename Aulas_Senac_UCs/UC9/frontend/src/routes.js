@@ -4,7 +4,7 @@ import Inicio from './Inicio'
 import Dashboard from './Dashboard'
 import Produtos from './Produtos'
 import CriarCategorias from './Categorias'
-import PedidosCozinha from './Cozinha/PedidosCozinha'
+import Pedidos from './Pedidos/index'
 
 export default function Rotas() {
     return (
@@ -14,7 +14,7 @@ export default function Rotas() {
                 <Route path='/Dashboard' element={<Dashboard />} />
                 <Route path='/Produtos' element={<Produtos />} />
                 <Route path='/CriarCategorias' element={<CriarCategorias />} />
-                <Route path='/PedidosCozinha' element={<PedidosCozinha />} />
+                <Route path='/Pedidos' element={<Pedidos />} />
 
 
             </Routes>
