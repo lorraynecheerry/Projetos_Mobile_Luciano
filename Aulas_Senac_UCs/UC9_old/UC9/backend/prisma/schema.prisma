@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Motoqueiro {
+  id       String @id @default(uuid())
+  nome     String
+  nusuario String
+  senha    String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  @@map("motoqueiros")
+}
+
+model Cliente {
+  id       String @id @default(uuid())
+  nome     String
+  telefone String
+  cpf_cnpj String
+  cep         String
+  rua         String
+  bairro      String
+  nCasa       String
+  cidade      String
+  estado      String
+  complemento String
+  email       String
+  senha       String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  Pedido Pedido?
+
+  @@map("clientes")
+}
+
+model Usuario {
+  id    String @id @default(uuid())
+  nome  String
+  email String
+  senha String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  Pedido   Pedido? @relation(fields: [pedidoId], references: [id])
+  pedidoId String?
+
+  @@map("usuarios")
+}
+
+model Categoria {
+  id   String @id @default(uuid())
+  nome String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  produtos Produto[]
+
+  @@map("categorias")
+}
+
+model Produto {
+  id         String  @id @default(uuid())
+  nome       String
+  fabricante String?
+  quantidade String
+  preco      Decimal @db.Decimal(9, 2)
+  banner     String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  categorias  Categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId String
+
+  Item_Pedido Item_Pedido[]
+
+  @@map("produtos")
+}
+
+model Item_Pedido {
+  id         String  @id @default(uuid())
+  quantidade Int
+  valor      Decimal @db.Decimal(9, 2)
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  produtos  Produto @relation(fields: [produtoId], references: [id])
+  produtoId String
+
+  pedido   Pedido @relation(fields: [IdPedido], references: [id])
+  IdPedido String
+
+  @@map("item_pedidos")
+}
+
+model Pedido {
+  id          String   @id @default(uuid())
+  n_Pedido    Int      @unique @default(autoincrement())
+  valor_total Decimal? @db.Decimal(9, 2)
+  status      String   @default("Aguardando")
+  draft       Boolean  @default(true)
+  entrega     Boolean  @default(false)
+  aceito      Boolean  @default(false)
+  entregador  String?
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  cliente   Cliente @relation(fields: [clienteId], references: [id])
+  clienteId String  @unique
+
+  Item_Pedido Item_Pedido[]
+
+  Usuario Usuario[]
+
+  @@map("pedidos")
+}

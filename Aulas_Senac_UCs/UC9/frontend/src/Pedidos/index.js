@@ -1,129 +1,116 @@
-import apiLocal from '../API/apiLocal/api'
-import { useEffect, useState } from 'react';
-import './App.scss'
+import { useEffect, useState } from "react";
+import apilocal from "../API/apiLocal/api"
 import Modal from "react-modal";
 
-
 export default function Pedidos() {
-    const [pedidos, setPedidos] = useState([''])
+
     const [clientes, setClientes] = useState([''])
-    const [listarPedido, setListarPedido] = useState([''])
+    const [idCliente, setIdCliente] = useState([''])
+    const [pedidos, setPedidos] = useState([''])
+    const [categorias, setICategorias] = useState([''])
+    const [categoriaId, setCategoriaId] = useState('')
+
     const [modalAberto, setModalAberto] = useState(false)
-    const [categorias, setCategorias] = useState([''])
-    const [categoriaId, setCategoriaId] = useState([''])
-    const [produtosCategoria, setProdutosCategoria] = useState([''])
 
     const iToken = localStorage.getItem('@tklogin2023')
     const token = JSON.parse(iToken)
 
+
     useEffect(() => {
         async function listarClientes() {
-            const response = await apiLocal.get('/ListarClientes', {
+            const resposta = await apilocal.get('/ListarClientes', {
                 headers: {
                     Authorization: 'Bearer ' + `${token}`
                 }
             })
-            setClientes(response.data)
+            setClientes(resposta.data)
         }
         listarClientes()
-    }, [])
-
-    useEffect(() => {
-        async function letCategorias() {
-            const resposta = await apiLocal.get('/ListarCategorias', {
-                headers: {
-                    Authorization: 'Bearer ' + `${token}`
-                }
-
-            })
-            setProdutosCategoria(resposta)
-        }
-        letCategorias()
-    }, [])
+    }, [clientes])
+    
     async function abrirModal() {
         try {
-            const id_cliente = id_cliente
-            const resposta = await apiLocal.post('/CriarPedidos', {
-                id_cliente
+            const clientesId = idCliente
+            const resposta = await apilocal.post('/CriarPedido', {
+                clientesId
             }, {
                 headers: {
                     Authorization: 'Bearer ' + `${token}`
                 }
             })
             setPedidos(resposta.data)
-            if (resposta.data.id) {
+            //console.log(resposta)
+            if (resposta.data) {
                 setModalAberto(true)
             }
 
-            async function letCategorias() {
-                const resposta = await apiLocal.get('/ListarCategorias', {
+            async function letcCategorias() {
+                const resposta = await apilocal.get('/ListarCategorias', {
                     headers: {
-                        Authorization: 'Bearer ' + `${token}`
+                        Authorization: 'Beraer ' + `${token}`
                     }
                 })
-                setCategorias(resposta.data)
+                setICategorias(resposta.data)
             }
-            letCategorias()
+            letcCategorias()
+
         } catch (err) {
 
         }
     }
-
-    console.log(categoriaId)
-
-    async function fecharModal() {
+    console.log(idCliente)
+    function fecharModal() {
         setModalAberto(false)
     }
-
-
-    // useEffect(() => {
-    //     async function loadPedido() {
-    //         const resposta = await apiLocal.get('/ListarPedidos')
-
-    //         setPedidos(resposta.data)
-    //     }
-    //     loadPedido()
-    // }, [pedidos])
-    // ///console.log(pedidos)
-
-
-    // useEffect(() => {
-    //     async function loadItem() {
-    //         const response = await apiLocal.get('/ListarPedidoUnico')
-    //         setListarPedido(response.data)
-    //     }
-    //     loadItem()
-    // }, [listarPedido])
-    // console.log(listarPedido)
-
-
     return (
-        <div className="container">
+        <div>
             <h1>Pedidos</h1>
-            <td>
-                {pedidos.map((item) => {
-                    return (<p>
-                        <button onClick={abrirModal}>   {item.nPedido} </button>
-
-
-
-                        <Modal isOpen={modalAberto}>
-                            <h1>DETALHES DO PEDIDO</h1>
-                            {listarPedido.map((push) => {
-                                return (
-                                    <div className="containerPedido">
-                                        <h1>Nome do Produto</h1><p>{push.produtos?.nome}</p>
-                                        <h1>Preço</h1><p>{push.produtos?.preco}</p>
-                                        <h1>quantidade</h1>  <p>{push.produtos?.quantidade}</p>
-                                    </div>
-                                )
-                            })}
-                            <button onClick={fecharModal}>fechar modal</button>
-                        </Modal>
-                    </p>
+            <select
+                value={idCliente}
+                onChange={(e) => setIdCliente(e.target.value)}
+            >
+                <option> Selecione o Cliente...</option>
+                {clientes.map((item) => {
+                    return (
+                        <option value={item.id}>{item.nome}</option>
                     )
                 })}
-            </td>
+
+            </select>
+            <button onClick={abrirModal} >Criar Pedidos</button>
+
+
+            {pedidos.length !== 1 && (
+
+                <Modal isOpen={modalAberto}>
+                    <h1>Realizar Pedido</h1>
+                    <>
+                        <h2>Cliente:{pedidos.clientes.nome}</h2>
+                        <h2>Numero do Pedido: {pedidos.n_pedido}</h2>
+                        <h1>Itens do Pedido</h1>
+                        <select
+                            value={categoriaId}
+                            onChange={(e) => setCategoriaId(e.target.value)}
+                        >
+
+                            <option>Selecione a categoria</option>
+                            {categorias.map((item) => {
+                                return (
+                                    <option value={item.id}>{item.nome}</option>
+                                )
+                            })}
+                        </select>
+                        <select>
+                            <option>Selecione a Produto</option>
+
+                        </select>
+                    </>
+                    <button onClick={fecharModal}>Finalizar Pedido</button>
+                </Modal>
+
+            )}
+
         </div>
     )
+
 }

@@ -19,7 +19,7 @@ model Motoqueiro {
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
-  Pedido    Pedido?
+ 
 
   @@map("motoqueiros")
 }
@@ -32,7 +32,9 @@ model Usuario {
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
-  Pedido    Pedido?
+
+  Pedido    Pedido?   @relation(fields: [pedidoId], references: [id])
+  pedidoId  String?
 
   @@map("usuarios")
 }
@@ -90,9 +92,14 @@ model Clients {
 }
 
 model Pedido {
-  id      String @id @default(uuid())
-  nPedido String
-  status  String
+  id          String   @id @default(uuid())
+  nPedido     Int      @unique @default(autoincrement())
+  valor_total Decimal? @db.Decimal(9, 2)
+  status      String   @default("Aguardadndo")
+  draft       Boolean  @default(true)
+  entrega     Boolean  @default(false)
+  aceito      Boolean  @default(false)
+  entregador  String?
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
@@ -100,21 +107,18 @@ model Pedido {
   clientes   Clients @relation(fields: [clientesId], references: [id])
   clientesId String  @unique
 
-  usuario   Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId String  @unique
-
-  motoqueiros  Motoqueiro @relation(fields: [motoqueiroId], references: [id])
-  motoqueiroId String     @unique
+  Usuario Usuario[]
 
   itemPedido itemPedido[]
+ 
 
   @@map("pedidos")
 }
 
 model itemPedido {
-  id         String @id @default(uuid())
-  quantidade String
-  valor      Decimal @db.Decimal(9,2)
+  id         String  @id @default(uuid())
+  quantidade Int
+  valor      Decimal @db.Decimal(9, 2)
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())

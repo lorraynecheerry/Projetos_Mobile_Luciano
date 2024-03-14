@@ -26,6 +26,7 @@ import { DeletarItemdoPedidoController } from './Controller/Itens do Pedidos/Del
 import { DeletarPedidoController } from './Controller/Pedidos/DeletarPedidosController'
 
 import { ListarPedidosController } from './Controller/Pedidos/ListarPedidosController'
+import { ListarClientesController } from './Controller/Clientes/ListarClientesController'
 
 import { isAutenticado } from './middleware/isAutenticado'
 
@@ -41,7 +42,7 @@ const upload = multer(uploadConfig.upload('./tmp'))
 //Rotas de Logins
 router.post('/LoginUsuarios', new LoginController().handle)
 router.post('/LoginMotoqueiros', new LoginMotoqueirosController().handle)
-router.get('/ListarMotoqueirosToken',  new ListarMotoqueirosTokenController().handle)
+router.get('/ListarMotoqueirosToken', new ListarMotoqueirosTokenController().handle)
 
 //Rotas de Motoqueiros
 router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
@@ -49,29 +50,30 @@ router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
 
 //Estrutura de Usuários
 router.post('/CriarUsuarios', new CriarusuariosController().handle)
-router.get('/ListarUsuarioToken', isAutenticado,  new ListarUsuarioTokenController().handle)
+router.get('/ListarUsuarioToken', isAutenticado, new ListarUsuarioTokenController().handle)
 
 //Estrutura de Produtos
-router.post('/CriarProdutos',  upload.single('file'), new CriarProdutosController().handle)
+router.post('/CriarProdutos', upload.single('file'), new CriarProdutosController().handle)
 
 //Estrutura Clientes
-router.post ('/CriarClientes', new CriarClientesController().handle)
-router.post ('/LoginClientes',  new LoginClientesController().handle)
+router.post('/CriarClientes', new CriarClientesController().handle)
+router.get('/ListarClientes', new ListarClientesController().handle)
+router.post('/LoginClientes', new LoginClientesController().handle)
 
 //pedidos
-router.post ('/CriarPedido',new CriarPedidoController().handle)
+router.post('/CriarPedido', new CriarPedidoController().handle)
 router.delete('/DeletarPedido', new DeletarPedidoController().handle)
-router.get ('/ListarPedidos',new ListarPedidosController().handle)
+router.get('/ListarPedidos', new ListarPedidosController().handle)
 router.get('/ListarPedidoUnico', new ListarPedidosUnicoController().handle)
 
- //Criar item do pedido
+//Criar item do pedido
 router.post('/CriarItemdoPedido', new CriarItemdoPedidoController().handle)
-router.put('/AlterarItemdoPedido/:id',new AlterarItemdoPedidoController().handle)
-router.delete('/DeletarItemdoPedido',new DeletarItemdoPedidoController().handle )
+router.put('/AlterarItemdoPedido/:id', new AlterarItemdoPedidoController().handle)
+router.delete('/DeletarItemdoPedido', new DeletarItemdoPedidoController().handle)
 
 //Estrutura de Categorias
-router.post('/CriarCategorias',  new CriarCategoriasController().handle)
-router.get('/ListarCategorias',  new ListarCategoriasController().handle)
+router.post('/CriarCategorias', new CriarCategoriasController().handle)
+router.get('/ListarCategorias', new ListarCategoriasController().handle)
 
 
 export { router }

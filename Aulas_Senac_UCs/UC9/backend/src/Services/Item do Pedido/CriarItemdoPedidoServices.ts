@@ -3,8 +3,9 @@ import prismaClient from "../../prisma";
 
 interface ItensPedido {
     produtoId: string
-    quantidade: string
+    quantidade: number
     pedidosId: string
+    valor: number
 }
 
 
@@ -12,19 +13,22 @@ class CriarItemdoPedidoServices {
     async execute({
         produtoId,
         quantidade,
-       pedidosId
+        pedidosId,
+        valor
     }: ItensPedido) {
 
         await prismaClient.itemPedido.create({
             data: {
                 produtosId: produtoId,
                 quantidade: quantidade,
-                pedidosId: pedidosId
+                pedidosId: pedidosId,
+                valor: valor
             },
             select: {
+                id: true,
                 produtosId: true,
                 quantidade: true,
-              
+                valor: true,
                 pedidosId: true
             }
 

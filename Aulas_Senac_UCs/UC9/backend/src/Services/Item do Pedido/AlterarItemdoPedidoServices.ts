@@ -2,7 +2,7 @@ import prismaClient from "../../prisma";
 
 interface AlteraItemPedido {
     id: string
-    quantidade: string
+    quantidade: number
 }
 
 class AlterarItemdoPedidoServices {
