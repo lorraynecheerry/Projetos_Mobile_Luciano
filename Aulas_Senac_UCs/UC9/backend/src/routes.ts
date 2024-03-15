@@ -31,6 +31,7 @@ import { ListarClientesController } from './Controller/Clientes/ListarClientesCo
 import { isAutenticado } from './middleware/isAutenticado'
 
 import { ListarPedidosUnicoController } from './Controller/Pedidos/ListarPedidoUnicoController'
+import { ListarProdutosCategoriaController } from './Controller/Categorias/ListarProdutosCategoriaController'
 
 import { AlterarItemdoPedidoController } from './Controller/Itens do Pedidos/AlterarItemdoPedidoController'
 import { ListarPedidosUnicoServices } from './Services/Pedidos/ListarPedidosUnicoServices'
@@ -70,6 +71,7 @@ router.get('/ListarPedidoUnico', new ListarPedidosUnicoController().handle)
 router.post('/CriarItemdoPedido', new CriarItemdoPedidoController().handle)
 router.put('/AlterarItemdoPedido/:id', new AlterarItemdoPedidoController().handle)
 router.delete('/DeletarItemdoPedido', new DeletarItemdoPedidoController().handle)
+router.get('/ListarProdutosCategoria', new ListarProdutosCategoriaController().handle)
 
 //Estrutura de Categorias
 router.post('/CriarCategorias', new CriarCategoriasController().handle)

@@ -1,28 +1,23 @@
 import prismaClient from "../../prisma";
 
 interface CriarPedido {
-   
     clientesId: string
-    
-
 }
 
 class CriarPedidoServices {
-    async execute({
-        clientesId }: CriarPedido) {
+    async execute({ clientesId }: CriarPedido) {
 
-            //console.log(nPedido, status, clientesId, usuarioId, motoqueiroId)
-        await prismaClient.pedido.create({
+        //console.log(clientesId )
+        const resposta = await prismaClient.pedido.create({
             data: {
-                
                 clientesId: clientesId,
-               
             },
-         include:{
-            clientes:true
-         }
+            include: {
+                clientes: true
+            }
         })
-        return { data: 'Cadastrado com sucesso' }
+        return (resposta)
+        // return { data: 'Cadastrado com sucesso' }
     }
 }
 export { CriarPedidoServices }

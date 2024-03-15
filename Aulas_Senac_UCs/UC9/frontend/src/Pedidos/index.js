@@ -5,10 +5,12 @@ import Modal from "react-modal";
 export default function Pedidos() {
 
     const [clientes, setClientes] = useState([''])
-    const [idCliente, setIdCliente] = useState([''])
-    const [pedidos, setPedidos] = useState([''])
-    const [categorias, setICategorias] = useState([''])
+    const [idCliente, setIdCliente] = useState('')
+    const [pedidos, setPedidos] = useState('')
+    const [categorias, setCategorias] = useState([''])
     const [categoriaId, setCategoriaId] = useState('')
+    const [produtosCategoria, setProdutosCategoria] = useState([''])
+    const [itensPedido, setItensPedido] = useState([''])
 
     const [modalAberto, setModalAberto] = useState(false)
 
@@ -27,9 +29,30 @@ export default function Pedidos() {
         }
         listarClientes()
     }, [clientes])
-    
+
+    useEffect(() => {
+        try {
+            if (categoriaId) {
+                return
+            }
+            async function lerProdutosCategoria() {
+                const resposta = await apilocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + `${token}`
+                    }
+                })
+                setProdutosCategoria(resposta.data)
+            }
+            lerProdutosCategoria()
+        } catch (err) {
+
+        }
+    }, [categoriaId])
+
+
     async function abrirModal() {
         try {
+           
             const clientesId = idCliente
             const resposta = await apilocal.post('/CriarPedido', {
                 clientesId
@@ -39,34 +62,38 @@ export default function Pedidos() {
                 }
             })
             setPedidos(resposta.data)
-            //console.log(resposta)
-            if (resposta.data) {
+            if (resposta.data.id) {
                 setModalAberto(true)
             }
 
-            async function letcCategorias() {
+            async function lerCategorias() {
                 const resposta = await apilocal.get('/ListarCategorias', {
                     headers: {
-                        Authorization: 'Beraer ' + `${token}`
+                        Authorization: 'Bearer ' + `${token}`
                     }
                 })
-                setICategorias(resposta.data)
+                setCategorias(resposta.data)
             }
-            letcCategorias()
+            lerCategorias()
 
-        } catch (err) {
+        } catch (error) {
+            console.log(error)
 
         }
     }
-    console.log(idCliente)
+
+
     function fecharModal() {
         setModalAberto(false)
     }
+
     return (
+
         <div>
             <h1>Pedidos</h1>
             <select
                 value={idCliente}
+
                 onChange={(e) => setIdCliente(e.target.value)}
             >
                 <option> Selecione o Cliente...</option>
@@ -79,37 +106,37 @@ export default function Pedidos() {
             </select>
             <button onClick={abrirModal} >Criar Pedidos</button>
 
-
             {pedidos.length !== 1 && (
-
                 <Modal isOpen={modalAberto}>
-                    <h1>Realizar Pedido</h1>
-                    <>
-                        <h2>Cliente:{pedidos.clientes.nome}</h2>
-                        <h2>Numero do Pedido: {pedidos.n_pedido}</h2>
-                        <h1>Itens do Pedido</h1>
-                        <select
-                            value={categoriaId}
-                            onChange={(e) => setCategoriaId(e.target.value)}
-                        >
+                    <div>
 
-                            <option>Selecione a categoria</option>
-                            {categorias.map((item) => {
-                                return (
-                                    <option value={item.id}>{item.nome}</option>
-                                )
-                            })}
-                        </select>
-                        <select>
-                            <option>Selecione a Produto</option>
+                        <h1>Realizar Pedido</h1>
+                        <>
+                            <h2>Cliente:{pedidos.clientes?.nome}</h2>
+                            <h2>Numero do Pedido: {pedidos.nPedido}</h2>
+                            <h1>Itens do Pedido</h1>
+                            <select
+                                value={categoriaId}
+                                onChange={(e) => setCategoriaId(e.target.value)}
+                            >
 
-                        </select>
-                    </>
-                    <button onClick={fecharModal}>Finalizar Pedido</button>
+                                <option>Selecione a categoria</option>
+                                {categorias.map((item) => {
+                                    return (
+                                        <option value={item.id}>{item.nome}</option>
+                                    )
+                                })}
+                            </select>
+
+                            <select>
+                                <option>Selecione a Produto</option>
+
+                            </select>
+                        </>
+                        <button onClick={fecharModal}>Finalizar Pedido</button>
+                    </div>
                 </Modal>
-
             )}
-
         </div>
     )
 
