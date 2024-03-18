@@ -11,6 +11,7 @@ export default function Pedidos() {
     const [categoriaId, setCategoriaId] = useState('')
     const [produtosCategoria, setProdutosCategoria] = useState([''])
     const [itensPedido, setItensPedido] = useState([''])
+    const [idItemProduto, setIdItemProduto] = useState('')
 
     const [modalAberto, setModalAberto] = useState(false)
 
@@ -85,6 +86,18 @@ export default function Pedidos() {
 
     function fecharModal() {
         setModalAberto(false)
+    }
+
+
+    async function handleItemPedido(e){
+        try {
+            e.preventDefault()
+            const prodExt = produtosCategoria.filter((item) => item.id === idItemProduto)
+
+        } catch (error) {
+            
+        }
+
     }
 
     return (
