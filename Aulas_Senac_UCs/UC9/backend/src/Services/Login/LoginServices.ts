@@ -35,6 +35,7 @@ class LoginServices {
         return {
             id: usuario.id,
             email: usuario.email,
+            nome: usuario.nome,
             token: token
         }
     }
