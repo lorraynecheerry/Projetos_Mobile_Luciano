@@ -4,40 +4,34 @@ import { toast } from 'react-toastify'
 
 export const Context = createContext()
 
-// const iToken = localStorage.getItem('@tklogin2023')
-// const token = JSON.parse(iToken)
-
 export default function AuthProvider({ children }) {
 
     const [token, setToken] = useState(false)
-    const autenticado = !token
+    const autenticado = !!token
 
-    // // useEffect(() => {
-    // const dados = localStorage.getItem('tklogin2023')
-    // const dado = JSON.parse(dados)
-    // setToken(dado.token)
-    // // }, [autenticado])
-    // console.log(token)
 
-    useEffect(() => {
-        try {
-
-            const resposta = await api.get('/ListarUsuarioToken', {
-                headers: {
-                    Authorization: `Bearer ` + `${token}`
-                }
-            })
-            
-              setToken(resposta.data)
-            //console.log(resposta.data)
-
-        } catch (error) {
-          
+    async function vefiricaToken() {
+        const iToken = localStorage.getItem('@tklogin2023')
+        if (!iToken) {
+            setToken(false)
+            return
         }
+        const { token } = JSON.parse(iToken)
 
-    }, [token])
+        const resposta = await api('/ListarUsuarioToken', {
+            headers: {
+                Authorization: 'Bearer ' + `${token}`
+            }
+        })
 
+        console.log(resposta)
+        // if (resposta.data.id) {
+        //     setToken(true)
+        // } else {
+        //     setToken(false)
+        // }
 
+    }
 
 
     async function handleLogar(email, password) {
@@ -51,7 +45,6 @@ export default function AuthProvider({ children }) {
             toast.success('Login Efetuado com Sucesso', {
                 toastId: 'toastId'
             })
-
             //console.log(resposta.data.token)
             // }
             const dado = localStorage.getItem('@tklogin2023')
@@ -61,10 +54,7 @@ export default function AuthProvider({ children }) {
                 token: dados.token
             }
             console.log(itens)
-
-
-            //const { id, email, nome, token } = resposta.data
-            //console.log(resposta.data.id)
+            setToken(true)
 
         } catch (err) {
             toast.error('Senha/Usuario incorretos')
@@ -74,7 +64,7 @@ export default function AuthProvider({ children }) {
     }
 
     return (
-        <Context.Provider value={{ handleLogar, autenticado }}>
+        <Context.Provider value={{ handleLogar, autenticado, vefiricaToken }}>
             {children}
         </Context.Provider>
     )

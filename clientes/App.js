@@ -25,6 +25,8 @@ function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name='Dashboard' component={Dashboard} />
+        <Stack.Screen name='Pedido' component={Pedido} />
+        {/* <Stack.Screen name='Dashboard' component={Dashboard} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -86,6 +88,24 @@ function Dashboard({ navigation }) {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
 
+  const [pedidos, setPedidos] = useState([''])
+
+  const iToken = localStorage.getItem('@tklogin2023')
+  const token = JSON.parse(iToken)
+
+
+  useEffect(() => {
+    // if (!token) {
+    //   navigation ()
+    // }
+    async function verificaToken() {
+      const resposta = await api.get('/ListarUsuarioToken', {
+        headers: {
+          Authorization: 'Bearer ' + `${token}`
+        }
+      })
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -94,7 +114,7 @@ function Dashboard({ navigation }) {
       await firebase.database().ref('motoqueiros').on('value', (snapshot) => {
         snapshot?.forEach((item) => {
           let data = {
-            key:item.key,
+            key: item.key,
             latitude: item.val().localizacao.latitude,
             longitude: item.val().localizacao.longitude
           }
@@ -119,8 +139,25 @@ function Dashboard({ navigation }) {
       <Button title='Retornar Login'
         onPress={() => navigation.navigate('Login')}
       />
+      <Button title='ir para pedidos'
+        onPress={() => navigation.navigate('Pedido')}
+      />
 
 
+    </View>
+  )
+}
+
+function Pedido({ navigation }) {
+
+
+  return (
+    <View>
+      <Text>Pedidos</Text>
+
+      <Button title='Retornar Login'
+        onPress={() => navigation.navigate('Login')}
+      />
     </View>
   )
 }

@@ -2,15 +2,15 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA0Rrdy7tP9B_gKfUrMrQzlZoB5b6CwYqQ",
-    authDomain: "aulasenac-6bedf.firebaseapp.com",
-    databaseURL: "https://aulasenac-6bedf-default-rtdb.firebaseio.com",
-    projectId: "aulasenac-6bedf",
-    storageBucket: "aulasenac-6bedf.appspot.com",
-    messagingSenderId: "160168792253",
-    appId: "1:160168792253:web:5c62255cbce1cce6efa7d4",
-    measurementId: "G-JC5V38EMD4"
-}
+    apiKey: "AIzaSyCE-UErEBNu-utUpftHGTR9KkK3k1nEtyg",
+    authDomain: "aulasenac1.firebaseapp.com",
+    databaseURL: "https://aulasenac1-default-rtdb.firebaseio.com",
+    projectId: "aulasenac1",
+    storageBucket: "aulasenac1.appspot.com",
+    messagingSenderId: "617454454648",
+    appId: "1:617454454648:web:2af4830f974e82cc872a8d",
+    measurementId: "G-MVR827KHB6"
+  }
 
 
 if (!firebase.apps.lenght) { //apps = se existe conexão
