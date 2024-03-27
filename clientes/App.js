@@ -27,7 +27,7 @@
 //         <Stack.Screen name="Login" component={Login} />
 //         <Stack.Screen name='Dashboard' component={Dashboard} />
 //         <Stack.Screen name='Pedido' component={Pedido} />
-      
+
 //       </Stack.Navigator>
 //     </NavigationContainer>
 //   )
@@ -35,16 +35,16 @@
 
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import Rotas from './routes/routes'
+import Rotas from './src/routes/routes'
 
 
 
 export default function App() {
   return (
-   <NavigationContainer>
-  <StatusBar backgroundColor='#000000' barStyle='light-content' translucent={false} />
-  <Rotas />
-   </NavigationContainer>
+    <NavigationContainer>
+      <StatusBar backgroundColor='#000000' barStyle='light-content' translucent={false} />
+      <Rotas />
+    </NavigationContainer>
   );
 }
 

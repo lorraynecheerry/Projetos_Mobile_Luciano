@@ -21,6 +21,7 @@ export default function AppRoutes() {
                 name="Dashboard"
                 component={Dashboard}
                 options={{ headerShown: false }} />
+                
             <Stack.Screen
                 name="Pedidos"
                 component={Pedidos}
