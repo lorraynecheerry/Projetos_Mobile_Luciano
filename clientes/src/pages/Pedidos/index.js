@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
+import OptionsMenu from "react-native-options-menu"
+import RNPickerSelect from 'react-native-picker-select'
 import { useNavigation } from '@react-navigation/native'
-import {AsyncStorage} from '@react-native-async-storage/async-storage'
+import { AsyncStorage } from '@react-native-async-storage/async-storage'
 import api from '../../../api'
 import {
   Text,
@@ -9,6 +11,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  TextInput,
 
 } from 'react-native'
 
@@ -21,11 +24,11 @@ export default function Pedido({ }) {
   const [produtosCategoria, setProdutosCategoria] = useState([''])
 
   const [modalAberto, setModalAberto] = useState(false)
-
+  const [nusuario, setNusuario] = useState('')
 
   const navigation = useNavigation()
 
-//  const iToken = AsyncStorage.settItem('@tklogin2023')
+  //  const iToken = AsyncStorage.settItem('@tklogin2023')
   // const token = JSON.parse(iToken)
 
 
@@ -99,19 +102,33 @@ export default function Pedido({ }) {
     <View>
       <Text style={styles.Text}> Fazer Pedidos</Text>
 
-      <Selection
+      {/* <selection
         value={idCliente}
         onPress={(e) => setIdCliente(e.target.value)}
       >
-        <Option>Selecione o Cliente...</Option>
+        <option>Selecione o Cliente...</option>
+        <View>
+
         {clientes.map((item) => {
           return (
-            <Option value={item.id}>{item.nome}</Option>
+            <option value={item.id}>{item.nome}</option>
           )
         })}
-      </Selection>
-      <Button onPress={abrirModal}>CriarPedido</Button>
+        </View>
+      </selection> */}
 
+      {/* <Button onPress={abrirModal}>CriarPedido</Button> */}
+
+
+      <TextInput
+        style={styles.input}
+        placeholderTextColor='black'
+        placeholder='Digite Seu email'
+        value={nusuario}
+        onChangeText={setNusuario}
+      />
+
+      
       <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
         <Text style={styles.buttonEnviarText}>Dashboard</Text>
       </TouchableOpacity>

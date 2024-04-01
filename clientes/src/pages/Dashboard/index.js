@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 //import {AsyncStorage} from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
+
 import {
   StyleSheet,
   StatusBar,
@@ -11,6 +12,7 @@ import {
   Button,
 
 } from 'react-native'
+
 
 
 
@@ -62,7 +64,7 @@ export default function Dashboard({ }) {
       <Text style={styles.titulo}>
         Dashboard
       </Text>
-{/* 
+      {/* 
       <View>
         <Text style={styles.titulo1}> latitude:{latitude}</Text>
         <Text style={styles.titulo1}> longitude:{longitude}</Text>
@@ -74,7 +76,7 @@ export default function Dashboard({ }) {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button}>
-        <Text style={styles.buttonEnviarText}>fazer pedidos</Text>
+        <Text style={styles.buttonEnviarText}>Menu</Text>
       </TouchableOpacity>
 
 
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF'
   },
-  
+
   button: {
     marginTop: 30,
     backgroundColor: "#DB9107",
@@ -131,5 +133,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
- 
+
 })
