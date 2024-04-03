@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
-
+import { useState, useEffect, useContext } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { Context } from '../../Contexts/contexto'
 import api from '../../../api'
 import {
   StyleSheet,
@@ -10,31 +10,32 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
-
 } from 'react-native'
 
 
-export default function Login({ navigation }) {
-  const [nusuario, setNusuario] = useState('')
+export default function Login() {
+  const navigation = useNavigation()
+
+  const { handleLogar } = useContext(Context)
+
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   async function handleLogin() {
 
     try {
-      const resposta = await api.post('/LoginClientes', {
-        nusuario,
-        password
-      })
-      navigation.navigate('Dashboard')
 
+      // if (!email || !password) {
+      //   alert('Existem Campos em Brancos', {
 
+      //     })
+      // }
+
+      await handleLogar(email, password)  //enviando pra funçao do contexto o que esta dentro de parentesses
     } catch (error) {
-      console.log(error)
-      alert('Nome ou Senha incorretas')
+
     }
-
   }
-
 
   return (
     <View style={styles.container}>
@@ -45,8 +46,8 @@ export default function Login({ navigation }) {
         style={styles.input}
         placeholderTextColor='#FFFFFF'
         placeholder='Digite Seu email'
-        value={nusuario}
-        onChangeText={setNusuario}
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         style={styles.input}
@@ -133,5 +134,3 @@ const styles = StyleSheet.create({
 
   }
 })
-
-

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 //import {AsyncStorage} from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
+import { Context } from '../../Contexts/contexto'
 
 import {
   StyleSheet,
@@ -16,7 +17,7 @@ import {
 
 
 
-export default function Dashboard({ }) {
+export default function Dashboard({}) {
   const navigation = useNavigation()
 
 

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Pressable
 
 } from 'react-native'
 
@@ -94,13 +95,57 @@ export default function Pedido({ }) {
     }
   }
 
-  function fecharModal() {
-    setModalAberto(false)
+  function ModalPedidos() {
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                <View>
+                  <>
+                    {clientes.map((item) => {
+                      return (
+                        <Text value={item.id}>{item.nome}-</Text>
+                      )
+                    })}
+                  </>
+                </View>
+              </Text>
+
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}> Fechar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.textStyle}>Fazer Pedido</Text>
+        </Pressable>
+      </View>
+    )
   }
+
 
   return (
     <View>
       <Text style={styles.Text}> Fazer Pedidos</Text>
+      <ModalPedidos />
 
       {/* <selection
         value={idCliente}
@@ -118,17 +163,28 @@ export default function Pedido({ }) {
       </selection> */}
 
       {/* <Button onPress={abrirModal}>CriarPedido</Button> */}
+      <View>
+        <>
+
+          {clientes.map((item) => {
+            return (
+              item.nome
+
+            )
+          })}
+        </>
+      </View>
 
 
       <TextInput
         style={styles.input}
         placeholderTextColor='black'
-        placeholder='Digite Seu email'
+        placeholder='Digite seu pedido'
         value={nusuario}
         onChangeText={setNusuario}
       />
 
-      
+
       <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
         <Text style={styles.buttonEnviarText}>Dashboard</Text>
       </TouchableOpacity>
@@ -156,6 +212,51 @@ const styles = StyleSheet.create({
   Text: {
     fontSize: 30,
     fontWeight: 'bold',
+  },
+  centeredView: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    //backgroundColor: "#FFFFFF",
+    // height: 
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    height: 600,
+    width: 350
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#FF9933',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 
 })
