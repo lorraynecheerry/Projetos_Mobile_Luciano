@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Context } from '../../Contexts/contexto'
-import api from '../../../api'
+
 import {
   StyleSheet,
   StatusBar,
@@ -14,7 +14,7 @@ import {
 
 
 export default function Login() {
-  const navigation = useNavigation()
+  //const navigation = useNavigation()
 
   const { handleLogar } = useContext(Context)
 
@@ -25,11 +25,11 @@ export default function Login() {
 
     try {
 
-      // if (!email || !password) {
-      //   alert('Existem Campos em Brancos', {
+      if (!email || !password) {
+        alert('Existem Campos em Brancos', {
 
-      //     })
-      // }
+          })
+      }
 
       await handleLogar(email, password)  //enviando pra funçao do contexto o que esta dentro de parentesses
     } catch (error) {
@@ -57,6 +57,7 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
       />
+      
       <TouchableOpacity onPress={handleLogin} style={styles.buttonEnviar}>
         <Text style={styles.buttonEnviarText}>Enviar</Text>
       </TouchableOpacity>

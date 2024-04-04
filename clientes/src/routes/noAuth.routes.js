@@ -10,7 +10,7 @@ export default function NoAuthRots() {
     return (
         <Stack.Navigator>
             <Stack.Screen                            //stack.screen = tela inicial
-                name="Login"
+                name='Login'
                 component={Login}
                 options={{ headerShown: false }}  //hearderShown: false= tira o header fixo de cima
             />
