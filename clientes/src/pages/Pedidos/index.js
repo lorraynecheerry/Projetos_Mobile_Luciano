@@ -16,6 +16,7 @@ import {
 
 } from 'react-native'
 
+
 export default function Pedido({ }) {
   const [idCliente, setIdCliente] = useState('')
   const [pedidos, setPedidos] = useState('')
@@ -175,14 +176,6 @@ export default function Pedido({ }) {
         </>
       </View>
 
-
-      <TextInput
-        style={styles.input}
-        placeholderTextColor='black'
-        placeholder='Digite seu pedido'
-        value={nusuario}
-        onChangeText={setNusuario}
-      />
 
 
       <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>

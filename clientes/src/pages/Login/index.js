@@ -25,11 +25,11 @@ export default function Login() {
 
     try {
 
-      if (!email || !password) {
-        alert('Existem Campos em Brancos', {
+      // if (!email || !password) {
+      //   alert('Existem Campos em Brancos', {
 
-          })
-      }
+      //     })
+      // }
 
       await handleLogar(email, password)  //enviando pra funçao do contexto o que esta dentro de parentesses
     } catch (error) {

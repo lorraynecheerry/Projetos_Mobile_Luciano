@@ -14,8 +14,8 @@ export default function AuthProvider({ children }) {
             await api.post('/LoginClientes', {
                 email, password
             })
-            const data = resposta.data
-            AsyncStorage.setItem('@tklogin2024', JSON.stringify(data))
+            // const data = resposta.data
+            // AsyncStorage.setItem('@tklogin2024', JSON.stringify(data))
             setToken(true)
         } catch (error) {
            alert(error)

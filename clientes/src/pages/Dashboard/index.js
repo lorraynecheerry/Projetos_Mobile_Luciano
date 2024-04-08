@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 //import {AsyncStorage} from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
-
-
+import { Context } from '../../Contexts/contexto'
+import api from '../../../api'
 import {
   StyleSheet,
   StatusBar,
@@ -11,35 +11,36 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
+  ScrollView,
 
 } from 'react-native'
 
 
 
-
-export default function Dashboard({}) {
+export default function Dashboard({ }) {
   const navigation = useNavigation()
 
 
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
+  const [cliente, setCliente] = useState([''])
 
   //const [pedidos, setPedidos] = useState([''])
 
-  // const iToken = localStorage.getItem('@tklogin2023')
-  // const token = JSON.parse(iToken)
 
+  useEffect(() => {
+    try {
+      async function loadClientes() {
+        const resposta = await api.get('/ListarClientes')
+        setCliente(resposta.data)
 
-  // useEffect(() => {
-  //   async function verificaToken() {
-  //     const resposta = await api.get('/ListarUsuarioToken', {
-  //       headers: {
-  //         Authorization: 'Bearer ' + `${token}`
-  //       }
-  //     })
-  //     verificaToken()
-  //   }
-  // }, [])
+      }
+      loadClientes()
+
+    } catch (error) {
+
+    }
+  }, [cliente])
 
 
   useEffect(() => {
@@ -65,11 +66,24 @@ export default function Dashboard({}) {
       <Text style={styles.titulo}>
         Dashboard
       </Text>
-      {/* 
-      <View>
-        <Text style={styles.titulo1}> latitude:{latitude}</Text>
-        <Text style={styles.titulo1}> longitude:{longitude}</Text>
-      </View > */}
+
+      <ScrollView>
+        <View style={styles.container}>
+
+
+          {cliente.map((item) => {
+            return (
+              <View style={styles.container}>
+                <Text style={styles.titulo} value={item.id} key={item.id}>  {item.nome}</Text>
+                {/* <Text style={styles.titulo} value={item.id} key={item.id}>  {item.celular}</Text> */}
+              </View>
+
+            )
+          })}
+
+
+        </View>
+      </ScrollView>
 
 
       <TouchableOpacity onPress={() => navigation.navigate('Pedidos')} style={styles.button}>
@@ -82,6 +96,7 @@ export default function Dashboard({}) {
 
 
     </View>
+
   )
 }
 
