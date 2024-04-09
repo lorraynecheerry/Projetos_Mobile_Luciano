@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
-import OptionsMenu from "react-native-options-menu"
 import RNPickerSelect from 'react-native-picker-select'
 import { useNavigation } from '@react-navigation/native'
-import { AsyncStorage } from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import api from '../../../api'
 import {
   Text,
@@ -25,6 +24,8 @@ export default function Pedido({ }) {
   const [categoriaId, setCategoriaId] = useState('')
   const [produtosCategoria, setProdutosCategoria] = useState([''])
 
+
+
   const [modalAberto, setModalAberto] = useState(false)
   const [nusuario, setNusuario] = useState('')
 
@@ -34,12 +35,15 @@ export default function Pedido({ }) {
   // const token = JSON.parse(iToken)
 
 
-
   useEffect(() => {
+    
     async function listarClientes() {
+      // const iToken = AsyncStorage.getItem('@tklogin2023')
+      // const token = (iToken)
+
       const resposta = await api.get('/ListarClientes', {
         headers: {
-          Authorization: 'Bearer ' + `${token}`
+          Authorization: `${token}`
         }
       })
       setClientes(resposta.data)
@@ -47,56 +51,57 @@ export default function Pedido({ }) {
     listarClientes()
   }, [clientes])
 
-  useEffect(() => {
-    try {
-      if (categoriaId) {
-        return
-      }
-      async function lerProdutosCategoria() {
-        const resposta = await api.get(`/ListarProdutosCategoria/${categoriaId}`, {
-          headers: {
-            Authorization: 'Bearer ' + `${token}`
-          }
-        })
-        setProdutosCategoria(resposta.data)
-      }
-      lerProdutosCategoria()
+  // useEffect(() => {
+  //   try {
+  //     if (categoriaId) {
+  //       return
+  //     }
+  //     async function lerProdutosCategoria() {
+  //       const resposta = await api.get(`/ListarProdutosCategoria/${categoriaId}`, {
+  //         headers: {
+  //           Authorization: `${token}`
+  //         }
+  //       })
+  //       setProdutosCategoria(resposta.data)
+  //     }
+  //     lerProdutosCategoria()
 
-    } catch (err) {
+  //   } catch (err) {
 
-    }
-  }, [categoriaId])
+  //   }
+  // }, [categoriaId])
 
-  async function abrirModal() {
-    try {
-      const clienteId = idCliente
-      const resposta = await api.post('/CriarPedido', {
-        clienteId
-      }, {
-        headers: {
-          Authorization: 'Bearer ' + `${token}`
-        }
-      })
-      setPedidos(resposta.data)
-      if (resposta.data.id) {
-        setModalAberto(true)
-      }
+  // async function abrirModal() {
+  //   try {
+  //     const clienteId = idCliente
+  //     const resposta = await api.post('/CriarPedido', {
+  //       clienteId
+  //     }, {
+  //       headers: {
+  //         Authorization: 'Bearer ' + `${token}`
+  //       }
+  //     })
+  //     setPedidos(resposta.data)
+  //     if (resposta.data.id) {
+  //       setModalAberto(true)
+  //     }
 
-      async function lerCategorias() {
-        const resposta = await api.get('/ListarCategorias', {
-          headers: {
-            Authorization: 'Bearer ' + `${token}`
-          }
-        })
-        setCategorias(resposta.data)
-      }
-      lerCategorias()
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //     async function lerCategorias() {
+  //       const resposta = await api.get('/ListarCategorias', {
+  //         headers: {
+  //           Authorization: 'Bearer ' + `${token}`
+  //         }
+  //       })
+  //       setCategorias(resposta.data)
+  //     }
+  //     lerCategorias()
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   function ModalPedidos() {
+
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -107,28 +112,34 @@ export default function Pedido({ }) {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
             setModalVisible(!modalVisible);
           }}>
+
+
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                <View>
-                  <>
-                    {clientes.map((item) => {
-                      return (
-                        <Text value={item.id}>{item.nome}-</Text>
-                      )
-                    })}
-                  </>
-                </View>
-              </Text>
+
+              <View>
+                <Text>FAÇA JA SEU PEDIDO </Text>
+
+
+                <RNPickerSelect
+                  value={idCliente}
+                  key={idCliente}
+                  onValueChange={(value) => setIdCliente(value)}
+                  items={clientes.map((item) => ({ label: item.nome, value: item.id }))}
+                />
+              </View>
+
+
 
               <Pressable
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => setModalVisible(!modalVisible)}>
                 <Text style={styles.textStyle}> Fechar</Text>
               </Pressable>
+
+
             </View>
           </View>
         </Modal>
@@ -145,36 +156,8 @@ export default function Pedido({ }) {
 
   return (
     <View>
-      <Text style={styles.Text}> Fazer Pedidos</Text>
       <ModalPedidos />
-
-      {/* <selection
-        value={idCliente}
-        onPress={(e) => setIdCliente(e.target.value)}
-      >
-        <option>Selecione o Cliente...</option>
-        <View>
-
-        {clientes.map((item) => {
-          return (
-            <option value={item.id}>{item.nome}</option>
-          )
-        })}
-        </View>
-      </selection> */}
-
-      {/* <Button onPress={abrirModal}>CriarPedido</Button> */}
-      <View>
-        <>
-
-          {clientes.map((item) => {
-            return (
-              item.nome
-
-            )
-          })}
-        </>
-      </View>
+      <Text style={styles.Text}> Fazer Pedidos</Text>
 
 
 
