@@ -33,72 +33,59 @@ export default function Pedido({ }) {
 
   //  const iToken = AsyncStorage.settItem('@tklogin2023')
   // const token = JSON.parse(iToken)
-
+  const Itoken = AsyncStorage.getItem('token')
+  const token = (Itoken)
 
   useEffect(() => {
-    
     async function listarClientes() {
-      // const iToken = AsyncStorage.getItem('@tklogin2023')
-      // const token = (iToken)
-
-      const resposta = await api.get('/ListarClientes', {
-        headers: {
-          Authorization: `${token}`
-        }
-      })
-      setClientes(resposta.data)
+      try {
+        const resposta = await api.get('/ListarClientes', {
+          headers: {
+            Authorization: `${token}`
+          }
+        });
+        setClientes(resposta.data);
+      } catch (error) {
+        console.error(error);
+      }
     }
-    listarClientes()
-  }, [clientes])
+    listarClientes();
+  }, []);
 
-  // useEffect(() => {
-  //   try {
-  //     if (categoriaId) {
-  //       return
+
+
+  // async function lerCategorias() {
+  //   const resposta = await apilocal.get('/ListarCategorias', {
+  //     headers: {
+  //       Authorization: 'Bearer ' + `${token}`
   //     }
-  //     async function lerProdutosCategoria() {
-  //       const resposta = await api.get(`/ListarProdutosCategoria/${categoriaId}`, {
-  //         headers: {
-  //           Authorization: `${token}`
-  //         }
-  //       })
-  //       setProdutosCategoria(resposta.data)
-  //     }
-  //     lerProdutosCategoria()
-
-  //   } catch (err) {
-
-  //   }
-  // }, [categoriaId])
-
-  // async function abrirModal() {
-  //   try {
-  //     const clienteId = idCliente
-  //     const resposta = await api.post('/CriarPedido', {
-  //       clienteId
-  //     }, {
-  //       headers: {
-  //         Authorization: 'Bearer ' + `${token}`
-  //       }
-  //     })
-  //     setPedidos(resposta.data)
-  //     if (resposta.data.id) {
-  //       setModalAberto(true)
-  //     }
-
-  //     async function lerCategorias() {
-  //       const resposta = await api.get('/ListarCategorias', {
-  //         headers: {
-  //           Authorization: 'Bearer ' + `${token}`
-  //         }
-  //       })
-  //       setCategorias(resposta.data)
-  //     }
-  //     lerCategorias()
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
+  //   })
+  //   setCategorias(resposta.data)
   // }
+  // lerCategorias()
+
+
+
+  
+  useEffect(() => {
+    try {
+        if (categoriaId) {
+            return
+        }
+        async function lerProdutosCategoria() {
+            const resposta = await apilocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            setProdutosCategoria(resposta.data)
+        }
+        lerProdutosCategoria()
+    } catch (err) {
+
+    }
+}, [categoriaId])
+
 
   function ModalPedidos() {
 
@@ -124,10 +111,10 @@ export default function Pedido({ }) {
 
 
                 <RNPickerSelect
-                  value={idCliente}
-                  key={idCliente}
-                  onValueChange={(value) => setIdCliente(value)}
-                  items={clientes.map((item) => ({ label: item.nome, value: item.id }))}
+                  value={categoriaId}
+                  key={categoriaId}
+                  onValueChange={(value) => setCategoriaId(value)}
+                  items={categoriaId.map((item) => ({ label: item.nome, value: item.id }))}
                 />
               </View>
 
@@ -147,24 +134,39 @@ export default function Pedido({ }) {
         <Pressable
           style={[styles.button, styles.buttonOpen]}
           onPress={() => setModalVisible(true)}>
-          <Text style={styles.textStyle}>Fazer Pedido</Text>
+          <Text style={styles.textStyle}>Fazer Pedidos</Text>
         </Pressable>
       </View>
     )
   }
 
-
   return (
     <View>
-      <ModalPedidos />
       <Text style={styles.Text}> Fazer Pedidos</Text>
 
 
 
-      <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
-        <Text style={styles.buttonEnviarText}>Dashboard</Text>
+      <TouchableOpacity onPress={() => {ModalPedidos}} style={styles.button}>
+        <Text style={styles.buttonEnviarText}>fazer Pedido</Text>
+
       </TouchableOpacity>
 
+
+      <RNPickerSelect
+        value={idCliente}
+        key={idCliente}
+        onValueChange={(value) => setIdCliente(value)}
+        items={clientes.map((item) => ({ label: item.nome, value: item.id }))}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
+        <Text style={styles.buttonEnviarText}>Dashboard</Text>
+
+      </TouchableOpacity>
+
+
+
+
+      <ModalPedidos />
     </View>
   )
 }
@@ -217,10 +219,14 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     padding: 10,
+    backgroundColor: 'aqua',
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: '#FF9933',
+    backgroundColor: 'aqua',
+    borderRadius: 10,
+    padding: 10,
+    width: 187
   },
   buttonClose: {
     backgroundColor: '#2196F3',
@@ -229,10 +235,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+
   },
 
 })
