@@ -54,43 +54,47 @@ export default function Pedido({ }) {
 
 
 
-  // async function lerCategorias() {
-  //   const resposta = await apilocal.get('/ListarCategorias', {
-  //     headers: {
-  //       Authorization: 'Bearer ' + `${token}`
-  //     }
-  //   })
-  //   setCategorias(resposta.data)
-  // }
-  // lerCategorias()
+  async function lerCategorias() {
+
+    const resposta = await apilocal.get('/ListarCategorias', {
+      headers: {
+        Authorization: 'Bearer ' + `${token}`
+      }
+    })
+    setCategorias(resposta.data)
+  }
+  lerCategorias()
 
 
 
-  
   useEffect(() => {
+    const Itoken = AsyncStorage.getItem('token')
+    const token = (Itoken)
+
     try {
-        if (categoriaId) {
-            return
-        }
-        async function lerProdutosCategoria() {
-            const resposta = await apilocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
-                headers: {
-                    Authorization: 'Bearer ' + `${token}`
-                }
-            })
-            setProdutosCategoria(resposta.data)
-        }
-        lerProdutosCategoria()
+      if (categoriaId) {
+        return
+      }
+      async function lerProdutosCategoria() {
+        const resposta = await apilocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
+          headers: {
+            Authorization: 'Bearer ' + `${token}`
+          }
+        })
+        setProdutosCategoria(resposta.data)
+      }
+      lerProdutosCategoria()
     } catch (err) {
 
     }
-}, [categoriaId])
+  }, [categoriaId])
 
 
   function ModalPedidos() {
 
-
     const [modalVisible, setModalVisible] = useState(false);
+
+
 
     return (
       <View style={styles.centeredView}>
@@ -111,10 +115,10 @@ export default function Pedido({ }) {
 
 
                 <RNPickerSelect
-                  value={categoriaId}
-                  key={categoriaId}
-                  onValueChange={(value) => setCategoriaId(value)}
-                  items={categoriaId.map((item) => ({ label: item.nome, value: item.id }))}
+                  value={categorias}
+                  key={categorias}
+                  onValueChange={(value) => setCategorias(value)}
+                  items={categorias.map((item) => ({ label: item.nome, value: item.id }))}
                 />
               </View>
 
@@ -145,11 +149,11 @@ export default function Pedido({ }) {
       <Text style={styles.Text}> Fazer Pedidos</Text>
 
 
-
-      <TouchableOpacity onPress={() => {ModalPedidos}} style={styles.button}>
-        <Text style={styles.buttonEnviarText}>fazer Pedido</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
+        <Text style={styles.buttonEnviarText}>Dashboard</Text>
 
       </TouchableOpacity>
+
 
 
       <RNPickerSelect
@@ -158,12 +162,13 @@ export default function Pedido({ }) {
         onValueChange={(value) => setIdCliente(value)}
         items={clientes.map((item) => ({ label: item.nome, value: item.id }))}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.button}>
-        <Text style={styles.buttonEnviarText}>Dashboard</Text>
+      {/* 
+      <TouchableOpacity onPress={() => {modalVisible}} style={styles.button}>
+        <Text style={styles.buttonEnviarText}>fazer Pedido</Text>
 
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-
+      <TouchableOpacity onPress={() => { ModalPedidos }}><Text>Enviar</Text></TouchableOpacity>
 
 
       <ModalPedidos />
@@ -219,11 +224,11 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     padding: 10,
-    backgroundColor: 'aqua',
+    backgroundColor: 'purple',
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: 'aqua',
+    backgroundColor: 'purple',
     borderRadius: 10,
     padding: 10,
     width: 187
