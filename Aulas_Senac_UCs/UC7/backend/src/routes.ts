@@ -1,37 +1,66 @@
-import {Router} from 'express'
-import  multer  from 'multer'
+import { Router } from 'express'
+import multer from 'multer'
 import uploadConfig from './config/multer'
 
-import { CriarUsuarioController } from './controllers/Usuarios/CriarUsuarioController'
-import { ListarUsuariosController } from './controllers/Usuarios/ListarUsuariosController'
-import { ListarUsuarioUnicoController } from './controllers/Usuarios/ListarUsuarioUnicoController'
-import { AlterarUsuarioController } from './controllers/Usuarios/AlterarUsuarioController'
-import { ApagarUsuariosController } from './controllers/Usuarios/ApagarUsuariosController'
-import { AuthUsuarioController } from './controllers/Usuarios/AuthUsuarioController'
 
-import { ListarClientesController } from './controllers/Clientes/ListarClientesController'
-import { CriarClientesController } from './controllers/Clientes/CriarClientesController'
-import { CriarProdutosController } from './controllers/Produtos/CriarProdutosController'
+import { LoginController } from './Controller/Login/LoginController'
+import { LoginMotoqueirosController } from './Controller/Motoqueiros/LoginMotoqueirosController'
+import { CriarusuariosController } from './Controller/Usuarios/CriarUsuariosController'
+import { ListarUsuarioTokenController } from './Controller/Usuarios/listarUsuarioTokenController'
+
+import { CriarMotoqueirosController } from './Controller/Motoqueiros/CriarMotoqueirosController'
+import { ListarMotoqueirosTokenController } from './Controller/Motoqueiros/ListarMotoqueiroTokenController'
+
+import { CriarClientesController } from './Controller/Clientes/CriarClientesController'
+import { LoginClientesController } from './Controller/Clientes/LoginClientesController'
+
+import { CriarProdutosController } from './Controller/Produtos/CriarProdutosController'
+
+import { CriarCategoriasController } from './Controller/Categorias/CriarCategoriasController'
+import { ListarCategoriasController } from './Controller/Categorias/ListarCategoriasController'
+
+import { PedidosController } from './Controller/Pedidos/PedidosController'
 
 import { isAutenticado } from './middleware/isAutenticado'
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
 
-//Usuários
-router.post('/CriarUsuarios', new CriarUsuarioController().handle)
-router.get('/ListarUsuarios', isAutenticado, new ListarUsuariosController().handle)
-router.get('/ListarUsuarioUnico/:id', isAutenticado, new ListarUsuarioUnicoController().handle)
-router.put('/AlterarUsuario', isAutenticado, new AlterarUsuarioController().handle)
-router.delete('/ApagarUsuarios', isAutenticado, new ApagarUsuariosController().handle)
-router.post('/AuthLogin', new AuthUsuarioController().handle)
 
-//Clientes
-router.post('/CriarClientes', isAutenticado, new CriarClientesController().handle)
-router.get('/ListarClientes', isAutenticado, new ListarClientesController().handle)
+//Rotas de Logins
+router.post('/LoginUsuarios', new LoginController().handle)
+router.post('/LoginMotoqueiros', new LoginMotoqueirosController().handle)
+router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenController().handle)
 
-//Produtos
+//Rotas de Motoqueiros
+router.post('/CriarMotoqueiros', isAutenticado, new CriarMotoqueirosController().handle)
+
+//Rotas de Clientes
+router.post('/CriarClientes', new CriarClientesController().handle)
+router.post('/LoginClientes', new LoginClientesController(). handle)
+router.get('/ListarClientes', isAutenticado, new CriarClientesController().listarClientes)
+
+
+//Estrutura de Usuários
+router.post('/CriarUsuarios', new CriarusuariosController().handle)
+router.get('/ListarUsuarioToken', isAutenticado, new ListarUsuarioTokenController().handle)
+
+//Estrutura de Produtos
 router.post('/CriarProdutos', isAutenticado, upload.single('file'), new CriarProdutosController().handle)
 
 
+//Estrutura de Categorias
+router.post('/CriarCategorias', isAutenticado, new CriarCategoriasController().handle)
+router.get('/ListarCategorias', isAutenticado, new ListarCategoriasController().handle)
 
-export {router}
+//Estrutura de Pedidos
+router.post('/CriarPedidos', isAutenticado, new PedidosController().criarPedidos)
+router.put('/AceitarPedidos', isAutenticado, new PedidosController().aceitarPedidos)
+router.get('/ListarProdutosGeral', new PedidosController().listarProdutosGeral)
+router.get('/ListarPedidos', isAutenticado, new PedidosController().listarPedidos)
+router.get('/ListarProdutosCategoria/:id', isAutenticado, new PedidosController().listarProdutosCategoria)
+router.post('/CriarItensPedido', isAutenticado, new PedidosController().criarItensPedido)
+router.delete('/ApagarItemPedido/:id', isAutenticado, new PedidosController().apagarItemPedido)
+router.get('/SomarItensPedido/:id', isAutenticado, new PedidosController().somarItensPedido)
+router.put('/FinalizarPedidoBalcao', isAutenticado, new PedidosController().finalizarPedidosBalcao)
+
+export { router }

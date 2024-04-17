@@ -1,15 +1,19 @@
-import Rotas from './routes'
+import RotasIndex from './Routes'
+import  AuthProvider  from './Contexts/AuthContext'
+import './App.scss'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
-export default function App() {
+function App() {
   return (
-    <div className='container-fluid'>
-      <Rotas />
-      <ToastContainer
-      autoClose={5000}
-      theme="colored"
-      />
-    </div>
-  )
+    <AuthProvider>
+      <div className='container-fluid'>
+        <RotasIndex />
+        <ToastContainer 
+        autoClose={5000}
+        />
+      </div>
+    </AuthProvider>
+  );
 }
+
+export default App;

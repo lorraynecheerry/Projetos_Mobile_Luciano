@@ -10,25 +10,25 @@ export function isAutenticado(
     res: Response,
     next: NextFunction
 ) {
-    const autetToken = req.headers.authorization
-
-    if (!autetToken) {
-        return res.status(401).end()
+    const autToken = req.headers.authorization
+    //console.log(autToken)
+    
+    const [, token] = autToken.split(' ')
+    
+    if (!token || token === '' || token === 'null') {
+        return res.json({dados: 'Token Invalido'})
     }
-
-    const [, token] = autetToken.split(' ')
-
+    
+    
     try {
-
         const { sub } = verify(
             token,
-            process.env.JWT_SEGREDO
-        ) as Payload
-        console.log(sub)
-        return next()
-
-    } catch (err) {
-        return res.status(401).end()
+            process.env.JWT_SECRET
+            ) as Payload
+            req.user_id = sub
+            return next()
+        } catch (err) {
+            return res.json({dados: 'Token Expirado'})
+            //return res.status(401).end()
     }
-
 }

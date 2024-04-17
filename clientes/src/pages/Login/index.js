@@ -14,7 +14,7 @@ import {
 
 
 export default function Login() {
-  //const navigation = useNavigation()
+  const navigation = useNavigation()
 
   const { handleLogar } = useContext(Context)
 
@@ -57,11 +57,15 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
       />
-      
+
       <TouchableOpacity onPress={handleLogin} style={styles.buttonEnviar}>
         <Text style={styles.buttonEnviarText}>Enviar</Text>
       </TouchableOpacity>
 
+    
+      <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} >
+        <Text >Cadastrar-se</Text>
+      </TouchableOpacity>
 
     </View>
   )

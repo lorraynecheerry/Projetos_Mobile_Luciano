@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import apiLocal from './apiLocal'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import firebase from '../firebase_aula/fireBaseConnect'
 import {
   StyleSheet,
   StatusBar,
@@ -49,7 +48,6 @@ export default function App() {
   }
 
   async function handleClearAsync(){
-    setRespNome('')
     await AsyncStorage.clear()
   }
 

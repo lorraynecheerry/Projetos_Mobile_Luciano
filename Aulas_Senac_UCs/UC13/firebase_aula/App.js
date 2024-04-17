@@ -1,34 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import firebase from './fireBaseConnect';
+import React, { useState, useEffect } from 'react'
+import firebase from './FirebaseConnect'
 import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   View,
+  TextInput,
   TouchableOpacity,
-
+  Keyboard
 } from 'react-native';
-
 import Feather from 'react-native-vector-icons/Feather'
 
-console.desableYellowBox = false
+console.disableYellowBox = false
 
 export default function App() {
+
+  //identificação do vendedor
+  //const vendedor = 10
 
   const [nome, setNome] = useState('')
   const [cidade, setCidade] = useState('')
   const [vendedores, setVendedores] = useState([''])
 
-  //identificador do vendedor
-  //const vendedor = 14
-
-  async function Login() {
+  async function cadastroFB() {
     if (!nome || !cidade) {
-      alert('campos vazios')
+      alert('Campos Vazios')
     }
-    let usuarios = await firebase.database().ref('vendedores')//.child(vendedor)
-    let chave = usuarios.push().key //cria uma chave unica firebase
+    let usuarios = await firebase.database().ref('vendedores')
+    let chave = usuarios.push().key
 
     usuarios.child(chave).set({
       nome: nome,
@@ -39,122 +38,104 @@ export default function App() {
     Keyboard.dismiss()
   }
 
-
   useEffect(() => {
     async function buscarVendedores() {
-      await firebase.database().ref('vendedores').on('value', (snapshot) => { //snapshot é uma palavra q vai receber informaçoes
+      await firebase.database().ref('vendedores').on('value', (snapshot) => {
         setVendedores([''])
-        snapshot?.forEach((item) => {   //forEach= laço de repetiçao   //item = pode ser qualquer nome para ser chamado no data
+        snapshot?.forEach((item) => {
           let data = {
             key: item.key,
             nome: item.val().nome,
             cidade: item.val().cidade
           }
-          setVendedores(oldArray => [...oldArray, data]) //oldArray = para nao se sobrepor um em cima do outro)
-          // console.log(data)
+          setVendedores(oldArray => [...oldArray, data])
         })
       })
-
     }
     buscarVendedores()
   }, [])
 
+  async function handleDelete(key){
 
-  //funçao para apagar 
-  async function handleDelete(key) {
     await firebase.database().ref('vendedores').child(key).remove()
-    alert(key)
   }
 
+  console.log(vendedores)
 
-  useEffect(() => {
-    async function dados() {
-      await firebase.database().ref('usuarios').set('nome')
-    }
-    dados()
 
-  }, [])
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor='#000000' barStyle={'default'} translucent={false} />
-      <Text style={styles.titulo}>USANDO FIREBASE</Text>
+      <Text style={styles.textoTitulo}>Usando o Firebase</Text>
 
-      < TextInput style={styles.formulario}
-        placeholder='Digite seu nome'
+      <TextInput
+        style={styles.inputFormulario}
+        placeholder='Digite Seu Nome'
         value={nome}
         onChangeText={setNome}
       />
-
-
-      < TextInput style={styles.formulario}
-        placeholder='Digite sua cidade '
+      <TextInput
+        style={styles.inputFormulario}
+        placeholder='Digite Sua Cidade'
         value={cidade}
         onChangeText={setCidade}
       />
-      <TouchableOpacity onPress={Login} style={styles.buttonEnviar}>
-        <Text style={styles.buttonEnviarText}>Enviar</Text>
+      <TouchableOpacity style={styles.botaoEnviar} onPress={cadastroFB}>
+        <Text style={styles.textoBotao}>Enviar</Text>
       </TouchableOpacity>
       {vendedores.map((item) => {
         return (
           <View>
-            {item.length !== 0 && (  //se item for diferente de 0 ele vai renderizar o que tem dentro do text
-              // se nao ele vai renderizar em branco   //<> = serve para encapsular um JSX
+            {item.length !== 0 && (
               <>
-                <Text>Nome:{item.nome}</Text>
-                <Text>Cidade:{item.cidade}</Text>
+                <Text>Nome: {item.nome}</Text>
+                <Text>Cidade: {item.cidade}</Text>
                 <TouchableOpacity onPress={() => handleDelete(item.key)}>
-
-                  <Feather name='trash-2' size={30} color='red' />
+                  <Feather name='trash-2' size={30} />
                 </TouchableOpacity>
-
-
               </>
             )}
-
           </View>
         )
-      })}
-
+      })}     
 
     </View>
-
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center'
   },
-  formulario: {
-    color: '#FFFFFF',
+  textoTitulo: {
     marginTop: 20,
+    fontSize: 35,
+    fontWeight: 'bold'
+  },
+  inputFormulario: {
+    marginTop: 10,
+    height: 50,
+    width: '95%',
     fontSize: 20,
-    backgroundColor: '#9cc3b2',
-    height: 45,
-    width: '97%',
-    borderRadius: 5,
+    padding: 7.5,
+    borderWidth: 1,
+    borderRadius: 10,
     textAlign: 'center'
   },
-  titulo: {
-    fontSize: 30,
+  botaoEnviar: {
+    marginTop: 10,
+    backgroundColor: '#005CFF',
+    height: 50,
+    width: '50%',
+    borderRadius: 10
+  },
+  textoBotao: {
+    color: '#FFFFFF',
+    fontSize: 20,
     fontWeight: 'bold',
-  },
-  buttonEnviar: {
-    marginTop: 30,
-    backgroundColor: "aqua",
-    height: 45,
-    width: '97%',
-    borderRadius: 8,
-  },
-  buttonEnviarText: {
     textAlign: 'center',
-    padding: 5,
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#FFFFFF'
-  },
+    padding: 7.5
+  }
 });

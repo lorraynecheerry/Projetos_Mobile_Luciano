@@ -1,71 +1,76 @@
+import { response } from 'express'
 import prismaClient from '../../prisma'
+import { hash } from 'bcryptjs'
+
 
 interface CriarClientes {
     nome: string
-    cpf_cnpj: string
-    rg_ie: string
     celular: string
-    fixo: string
+    cpf: string
+    email: string
+    password: string
+    cep: string
     rua: string
+    numero: string
     complemento: string
     bairro: string
     cidade: string
     estado: string
+
 }
 
 class CriarClientesServices {
     async execute({
         nome,
-        cpf_cnpj,
-        rg_ie,
         celular,
-        fixo,
+        cpf,
+        email,
+        password,
+        cep,
         rua,
+        numero,
         complemento,
         bairro,
         cidade,
         estado
     }: CriarClientes) {
 
-        if (!nome || !cpf_cnpj || !rg_ie || !celular || !rua || !bairro || !cidade || !estado) {
-            throw new Error('Campos em Branco não são Permitidos')
-        }
-
-        const docCadastrado = await prismaClient.clients.findFirst({
-            where: {
-                OR: [
-                    {
-                        cpf_cnpj: cpf_cnpj
-                    },
-                    {
-                        rg_ie: rg_ie
-                    }
-                ]
+        const emailExiste = await prismaClient.cliente.findFirst({
+            where:{
+                email: email
             }
-
         })
-        if (docCadastrado) {
-            throw new Error('CPF/CNPJ - RG/IE já esta cadastrado')
+
+        if(emailExiste){
+            throw new Error('E-mail já cadastrado')
         }
 
-        await prismaClient.clients.create({
+        const senhaCrypt = await hash(password, 8)
+
+
+        await prismaClient.cliente.create({
             data: {
                 nome: nome,
-                cpf_cnpj: cpf_cnpj,
-                rg_ie: rg_ie,
                 celular: celular,
-                fixo: fixo,
+                cpf: cpf,
+                email: email,
+                senha: senhaCrypt,
+                cep: cep,
                 rua: rua,
+                numero: numero,
                 complemento: complemento,
                 bairro: bairro,
                 cidade: cidade,
-                estado: estado
+                estado: estado                
             }
         })
-        return { data: 'Dados Salvos com Sucesso' }
-
+        return ({Dados: 'Cadastro Efetuado com Sucesso'})
     }
 
+    async listarClientes(){
+        const resposta = await prismaClient.cliente.findMany({})
+        return resposta
+    }
 }
 
 export { CriarClientesServices }

@@ -21,8 +21,8 @@ export default function Dashboard({ }) {
   const navigation = useNavigation()
 
 
-  const [latitude, setLatitude] = useState('')
-  const [longitude, setLongitude] = useState('')
+  // const [latitude, setLatitude] = useState('')
+  // const [longitude, setLongitude] = useState('')
   const [cliente, setCliente] = useState([''])
 
   //const [pedidos, setPedidos] = useState([''])
@@ -43,23 +43,23 @@ export default function Dashboard({ }) {
   }, [cliente])
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    async function acompanhamentoPedido() {
-      await firebase.database().ref('motoqueiros').on('value', (snapshot) => {
-        snapshot?.forEach((item) => {
-          let data = {
-            key: item.key,
-            latitude: item.val().localizacao.latitude,
-            longitude: item.val().localizacao.longitude
-          }
-          setLatitude(data.latitude)
-          setLongitude(data.longitude)
-        })
-      })
-    }
-    acompanhamentoPedido()
-  }, [])
+  //   async function acompanhamentoPedido() {
+  //     await firebase.database().ref('motoqueiros').on('value', (snapshot) => {
+  //       snapshot?.forEach((item) => {
+  //         let data = {
+  //           key: item.key,
+  //           latitude: item.val().localizacao.latitude,
+  //           longitude: item.val().localizacao.longitude
+  //         }
+  //         setLatitude(data.latitude)
+  //         setLongitude(data.longitude)
+  //       })
+  //     })
+  //   }
+  //   acompanhamentoPedido()
+  // }, [])
 
   return (
     <View>
@@ -75,7 +75,8 @@ export default function Dashboard({ }) {
             return (
               <View style={styles.container}>
                 <Text style={styles.titulo} value={item.id} key={item.id}>  {item.nome}</Text>
-                {/* <Text style={styles.titulo} value={item.id} key={item.id}>  {item.celular}</Text> */}
+             
+
               </View>
 
             )

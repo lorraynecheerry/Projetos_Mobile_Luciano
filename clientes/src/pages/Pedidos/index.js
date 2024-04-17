@@ -21,18 +21,13 @@ export default function Pedido({ }) {
   const [pedidos, setPedidos] = useState('')
   const [categorias, setCategorias] = useState([''])
   const [clientes, setClientes] = useState([''])
-  const [categoriaId, setCategoriaId] = useState('')
+  const [categoriaId, setCategoriaId] = useState([''])
   const [produtosCategoria, setProdutosCategoria] = useState([''])
-
-
-
-  const [modalAberto, setModalAberto] = useState(false)
+ 
   const [nusuario, setNusuario] = useState('')
 
   const navigation = useNavigation()
 
-  //  const iToken = AsyncStorage.settItem('@tklogin2023')
-  // const token = JSON.parse(iToken)
   const Itoken = AsyncStorage.getItem('token')
   const token = (Itoken)
 
@@ -53,10 +48,11 @@ export default function Pedido({ }) {
   }, []);
 
 
+useEffect (() => {
 
   async function lerCategorias() {
 
-    const resposta = await apilocal.get('/ListarCategorias', {
+    const resposta = await api.get('/ListarCategorias', {
       headers: {
         Authorization: 'Bearer ' + `${token}`
       }
@@ -64,6 +60,9 @@ export default function Pedido({ }) {
     setCategorias(resposta.data)
   }
   lerCategorias()
+
+
+},[])
 
 
 
@@ -76,7 +75,7 @@ export default function Pedido({ }) {
         return
       }
       async function lerProdutosCategoria() {
-        const resposta = await apilocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
+        const resposta = await api.get(`/ListarProdutosCategoria/${categoriaId}`, {
           headers: {
             Authorization: 'Bearer ' + `${token}`
           }
@@ -92,8 +91,7 @@ export default function Pedido({ }) {
 
   function ModalPedidos() {
 
-    const [modalVisible, setModalVisible] = useState(false);
-
+    
 
 
     return (
@@ -111,6 +109,7 @@ export default function Pedido({ }) {
             <View style={styles.modalView}>
 
               <View>
+          
                 <Text>FAÇA JA SEU PEDIDO </Text>
 
 
@@ -118,8 +117,9 @@ export default function Pedido({ }) {
                   value={categorias}
                   key={categorias}
                   onValueChange={(value) => setCategorias(value)}
-                  items={categorias.map((item) => ({ label: item.nome, value: item.id }))}
+                  items={categorias.map((iten) => ({label: iten.nome, value: iten.id }))}
                 />
+
               </View>
 
 
@@ -144,8 +144,11 @@ export default function Pedido({ }) {
     )
   }
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View>
+          
       <Text style={styles.Text}> Fazer Pedidos</Text>
 
 
@@ -168,7 +171,7 @@ export default function Pedido({ }) {
 
       </TouchableOpacity> */}
 
-      <TouchableOpacity onPress={() => { ModalPedidos }}><Text>Enviar</Text></TouchableOpacity>
+      <TouchableOpacity onPress={() => setModalVisible(true)}><Text>Enviar</Text></TouchableOpacity>
 
 
       <ModalPedidos />

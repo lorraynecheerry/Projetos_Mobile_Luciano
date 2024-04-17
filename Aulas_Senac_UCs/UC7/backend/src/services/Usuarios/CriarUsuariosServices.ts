@@ -1,45 +1,41 @@
 import prismaClient from '../../prisma'
 import { hash } from 'bcryptjs'
 
-interface CriarUsuario {
+interface CriarUsuarios {
     nome: string
     email: string
     password: string
 }
 
-class CriarUsuarioServices {
-    async execute({ nome, email, password }: CriarUsuario) {
+class CriarusuariosServices {
+    async execute({ nome, email, password }: CriarUsuarios) {
 
         if (!nome || !email || !password) {
-            throw new Error('Campos em Branco não são Permitidos')
+            throw new Error('Existem campos em branco')
         }
-        const emailCadastrado = await prismaClient.user.findFirst({
+        const emailExiste = await prismaClient.usuario.findFirst({
             where: {
                 email: email
             }
         })
-        if (emailCadastrado) {
-            throw new Error('Email já esta Cadastrado')
+        if (emailExiste) {
+            throw new Error('Email já cadastrado')
         }
-
-        const senhaCrypt = await hash(password, 8)
-
-        const usuario = await prismaClient.user.create({
-            data: {
+         const senhaCrypt = await hash(password, 8)
+         const resposta = await prismaClient.usuario.create({
+            data:{
                 nome: nome,
                 email: email,
                 senha: senhaCrypt
             },
-            select: {
+            select:{
                 id: true,
                 nome: true,
                 email: true
             }
-        })      
-
-        return { dados: usuario }
-
+         })
+         return ({resposta})
     }
 }
 
-export { CriarUsuarioServices }
+export { CriarusuariosServices }
