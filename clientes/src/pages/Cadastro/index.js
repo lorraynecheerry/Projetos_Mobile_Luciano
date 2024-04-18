@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import {
     SafeAreaView,
@@ -10,12 +9,15 @@ import {
     TextInput,
     TouchableOpacity
 } from 'react-native'
+
 import api from '../../../api'
+import apiCEP from '../../apiCEP'
+
 
 import { useNavigation } from '@react-navigation/native'
 
-
 export default function Cadastro() {
+
     const navigation = useNavigation()
 
     const [nome, setNome] = useState('')
@@ -23,7 +25,7 @@ export default function Cadastro() {
     const [telefone, setTelefone] = useState('')
     const [cep, setCep] = useState('')
     const [rua, setRua] = useState('')
-    const [nCasa, setNCasa] = useState('')
+    const [complemento, setComplemento] = useState('')
     const [bairro, setBairro] = useState('')
     const [cidade, setCidade] = useState('')
     const [estado, setEstado] = useState('')
@@ -31,29 +33,51 @@ export default function Cadastro() {
     const [password, setPassword] = useState('')
     const [confpassword, setConfPassword] = useState('')
 
+    const [buscaCep, setBuscaCep] = useState('')
 
-    async function FazerCadastro() {
-        try {
-           await api.post('/CriarClientes', {
-            nome,
-            cpf_cnpj,
-            celular,
-            cep,
-            rua,
-            complemento,
-            bairro,
-            cidade,
-            estado,
-            email,
-            password
-            })
-
-            alert('Cadastrado com Sucesso')
-            navigation.navigate('Login')
-        } catch (error) {
-           
+    async function handleBuscaCep() {
+        if (cep.length > 8 || cep.length < 8) {
+            alert('Cep inválido')
+        } else {
+            const response = await apiCEP.get(`/${cep}/json/`)
+            setBuscaCep(response.data)
         }
     }
+
+    useEffect(() => {
+        function addBuscaCep() {
+            setRua(buscaCep.logradouro || rua)
+            setBairro(buscaCep.bairro || bairro)
+            setCidade(buscaCep.localidade || cidade)
+            setEstado(buscaCep.uf || estado)
+        }
+        addBuscaCep()
+    }, [handleBuscaCep])
+
+    async function handleCadastrar() {
+        try {
+            const response = await api.post('/CriarClientes', {
+                nome,
+                telefone,
+                cpf_cnpj,
+                rua,
+                cep,
+                complemento,
+                bairro,
+                cidade,
+                estado,
+                password,
+                email
+
+            })
+            console.log(response)
+
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+
 
     return (
         <SafeAreaView style={style.container}>
@@ -95,7 +119,7 @@ export default function Cadastro() {
                             keyboardType="numeric"
                             value={cep}
                             onChangeText={setCep}
-                        
+                            onBlur={handleBuscaCep}
                         />
 
                         <TextInput
@@ -133,8 +157,8 @@ export default function Cadastro() {
                         <TextInput
                             placeholder='Digite seu Complemento'
                             style={style.input}
-                            value={nCasa}
-                            onChangeText={setNCasa}
+                            value={complemento}
+                            onChangeText={setComplemento}
                         />
 
                         <TextInput
@@ -160,7 +184,7 @@ export default function Cadastro() {
                             secureTextEntry={true}
                         />
 
-                        <TouchableOpacity onPress={FazerCadastro} style={style.buttonEnviar}>
+                        <TouchableOpacity onPress={handleCadastrar} style={style.buttonEnviar}>
                             <Text style={style.buttonEnviarText}>Enviar</Text>
                         </TouchableOpacity>
 
@@ -212,35 +236,26 @@ const style = StyleSheet.create({
         paddingLeft: 10
     },
     buttonEnviar: {
-        color: '#FFFFFF',
-        marginTop: 20,
-        fontSize: 20,
-        backgroundColor: '#9cc3b2',
+        marginTop: 15,
+        marginBottom: 20,
+        backgroundColor: '#FF8016',
         height: 45,
-        width: '97%',
-        borderRadius: 5,
-        textAlign: 'center'
+        width: 350,
+        borderRadius: 8,
     },
 
     buttonEnviarText: {
-        color: '#FFFFFF',
-    marginTop: 20,
-    fontSize: 20,
-    backgroundColor: '#9cc3b2',
-    height: 45,
-    width: '97%',
-    borderRadius: 5,
-    textAlign: 'center'
+        textAlign: 'center',
+        padding: 5,
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: '#FFFFFF'
     },
 
     buttonCriar: {
-        color: '#FFFFFF',
-    marginTop: 20,
-    fontSize: 20,
-    backgroundColor: '#9cc3b2',
-    height: 45,
-    width: '97%',
-    borderRadius: 5,
-    textAlign: 'center'
+        backgroundColor: '#00A4AD',
+        height: 45,
+        width: 350,
+        borderRadius: 8,
     },
 })
